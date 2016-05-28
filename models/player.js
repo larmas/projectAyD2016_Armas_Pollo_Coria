@@ -19,6 +19,8 @@ function Player(name) {
    * user envido points
    */
   this.envidoPoints = 0;
+  
+  this.wonH=[];
 }
 
 /*

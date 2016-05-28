@@ -18,16 +18,17 @@ function Game(player1, player2){
   /*
    * Player 1
    */
-  this.player1 = new Player('Player 1');
+  this.player1 = new Player("player 1");
 
   /*
    * Player 2
    */
-  this.player2 = new Player('Player 2');
+  this.player2 = new Player("player 2");
 
   /*
    * sequence of previous Rounds
    */
+  
   this.rounds = [];
 
   /*
@@ -69,6 +70,10 @@ Game.prototype.newRound = function(){
   this.rounds.push(round);
 
   return this;
+}
+
+function noCL(){
+  return (this.player1.cards==[]) && (this.player2.cards==[]);
 }
 
 /*
