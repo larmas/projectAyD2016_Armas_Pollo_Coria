@@ -36,10 +36,19 @@ describe('Game#play', function(){
     ]);
   });
 
-  it('plays [envido, quiero] should gives 2 points to winner', function(){
+  it('plays [envido, no-quiero] should give 1 point to chanter', function(){
     game.play('player1', 'envido');
-    game.play('player2', 'quiero');
+    game.play('player2', 'no-quiero-e');
+
+    expect(game.score).to.equal([1, 0]);
+  });
+  
+  it('plays [envido, quiero] should give 2 points to winner', function(){
+    game.play('player1', 'envido');
+    game.play('player2', 'quiero-e');
 
     expect(game.score).to.deep.equal([0, 2]);
   });
+  
+
 });
