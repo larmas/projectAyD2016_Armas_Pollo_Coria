@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<script type= "text/javascript" src="player.js"> </script>
+		<script type= "text/javascript" src="game.js"> </script>
+		<script type= "text/javascript" src="card.js"> </script>
+		<script type= "text/javascript" src="deck.js"> </script>
+		<script type= "text/javascript" src="round.js"> </script>
+	</head>
+
+	<body>
+		<script>
+			var player1=new Player("Mariano");
+			var player2=new Player("Leandro");
+			var myGame = new Game(player1,player2);
+			var myRound = new Round(myGame,player1,1);
+			myRound.deal();
+			document.write(myRound.game.player1.envidoPoints,"<br />");
+		</script>
+	</body>
+</html>

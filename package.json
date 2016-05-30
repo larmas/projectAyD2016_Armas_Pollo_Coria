@@ -7,23 +7,25 @@
     "test": "mocha"
   },
   "author": "me",
-  "license": "BSD-2-Clause",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^3.2.0"
   },
   "dependencies": {
+    "chai": "^3.5.0",
     "javascript-state-machine": "^2.3.5",
     "lodash": "^4.6.1",
-    "chai": "~3.5.0"
+    "mocha": "^2.5.1"
   },
   "directories": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/larmas/projectAyD2016_Armas_Pollo_Coria.git"
+    "url": "git+https://github.com/larmas/projectAyD2016_Armas_Pollo_Coria"
   },
   "bugs": {
-    "url": "https://github.com/larmas/projectAyD2016_Armas_Pollo_Coria/issues"
-  }
+    "url": "https://github.com/NismanIsNotDead/truco/issues"
+  },
+  "homepage": "https://github.com/NismanIsNotDead/truco#readme"
 }

@@ -51,33 +51,44 @@ function Game(player1, player2){
  * Check if it's valid move and play in the current round
  */
 Game.prototype.play = function(player, action, value){
-  if(this.currentRound.currentTurn !== player)
-    throw new Error("[ERROR] INVALID TURN...");
+	if(this.currentRound.currentTurn !== player)
+		throw new Error("[ERROR] INVALID TURN...");
 
-  if(this.currentRound.fsm.cannot(action))
-    throw new Error("[ERROR] INVALID MOVE...");
+	if(this.currentRound.fsm.cannot(action))
+		throw new Error("[ERROR] INVALID MOVE...");
 
-  return this.currentRound.play(action, value);
+	return this.currentRound.play(action, value);
 };
 
+Game.prototype.changeTurn = function(){
+	if (this.currentHand.wonH != undefined){
+		if(this.currentHand.wonH.indexOf(this.currentRound.roundN)!=-1){
+			return this.currentHand;
+		}else{
+			 return this.currentHand = switchPlayer(this.currentHand);
+		}
+	}
+	else{
+		return this.currentTurn = switchPlayer(this.currentTurn);
+	}
+}
 /*
  * Create and return a new Round to this game
  */
-Game.prototype.newRound = function(){
-  var round = new Round(this, this.currentHand);
+Game.prototype.newRound = function(numRound){
+  var round = new Round(this, this.currentHand,numRound);
   this.currentRound = round;
-  this.currentHand = switchPlayer(this.currentHand);
+  this.currentHand = this.changeTurn();
   this.rounds.push(round);
-
   return this;
 }
 
 function noCL(){
-  return (this.player1.cards==[]) && (this.player2.cards==[]);
+	return (this.player1.cards==[]) && (this.player2.cards==[]);
 }
 
 /*
- * returns the oposite player
+ * returns the opossite player
  */
 function switchPlayer(player) {
   return "player1" === player ? "player2" : "player1";
