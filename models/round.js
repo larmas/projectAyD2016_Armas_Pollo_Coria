@@ -28,7 +28,7 @@ function newTrucoFSM(){
     { name: 'no-quiero-t', 	from: ['truco'],              		to: 'no-quiero-t' },
     { name: 'play-card', 	from: ['quiero-e', 'no-quiero-e',
                          	       'first-card', 'played-card'],to: 'played-card' },
-    { name: 'play-card', 	from: ['quiero-t'],              	to: 'play-card-t' }
+    { name: 'play-card', 	from: ['quiero-t'],              	to: 'quiero-t' }
   ]});
 
   return fsm;
@@ -74,7 +74,7 @@ function newPlayedFSM(){
 	  return fsm;
 	}
 
-function Round(game,turn,roundN){
+function Round(game,turn){
   //Game
   this.game = game;
   
@@ -97,42 +97,55 @@ function Round(game,turn,roundN){
  */
 Round.prototype.deal = function(){
 	var deck = new Deck().mix();
-
   	this.game.player1.setCards(_.pullAt(deck, 0, 2, 4));
   	this.game.player2.setCards(_.pullAt(deck, 1, 3, 5));
 };
 
-Round.prototype.changeTurn = function(){
-	if (this.currentTurn.wonH != undefined){
-		if(this.currentTurn.wonH.indexOf(this.currentTurn)!=-1){
-			return this.currentTurn;
-		}else{
-			 return this.currentTurn = switchPlayer(this.currentTurn);
-		}
+Round.prototype.changeTurn = function(game){
+	if (this.fsmCP.current=='p2-won-1st' || this.fsmCP.current=='1vs1-1' || this.fsmCP.current=='1vs1-2'){
+		this.currentTurn;
 	}
 	else{
-		return this.currentTurn = switchPlayer(this.currentTurn);
+		this.currentTurn = this.switchPlayer(this.currentTurn,game);
 	}
 }
 /*
  * returns the opossite player
  */
-function switchPlayer(player) {
-	return "player1" === player ? "player2" : "player1";
+Round.prototype.switchPlayer=function (player,game) {
+	if(player==game.player1){
+		return game.player2;
+	}
+	else{
+		return game.player1;
+	}
 };
 
-Round.prototype.calculateScore = function(action){
+Round.prototype.calculateScore = function(action,fsm,fsmCP){
 	if(action == 'quiero-e'){
 		if (this.game.player1.envidoPoints<this.game.player2.envidoPoints){
 			this.score = [0, 2];
-		}else{ this.score = [2, 0];}
+		}else{
+			this.score = [2, 0];
+		}
 	}
 	else if (action=='no-quiero-e'){this.score[1,0];}
 	else if	(action=='no-quiero-t'){this.score[1,0];}
 	else if (action=='play-card'){
-		
+		if(fsmCP.current=='p1-wins'){
+			if(fsm.current=='quiero-t'){
+				this.score = [2, 0];
+			}else{
+				this.score = [1, 0];
+			}
+		}else if(fsmCP.current=='p2-wins'){
+			if(fsm.current=='quiero-t'){
+				this.score = [0, 2];
+			}else{
+				this.score = [0, 1];
+			}
+		}
 	}
-	
 	
 	this.game.score[0] += this.score[0];
 	this.game.score[1] += this.score[1];
@@ -140,40 +153,40 @@ Round.prototype.calculateScore = function(action){
 	return this.score;
 }
 
-function makePlay(action,i){
-	this.fsm[action]();
+function makePlay(action,i,fsm,fsmCP,currentTurn){
+	fsm[action]();
 	if(action=='play-card'){
-		if (this.auxCard==undefined){
+		if (this.auxCard == undefined){
 			fsmCP['play-card']();
-			this.auxCard =this.currentTurn.cards[i];
+			this.auxCard = currentTurn.cards[i];
 		}
-		else if(this.currentTurn.cards[i].confront(this.auxCard)==1){//last played card defeats aux
+		else if(currentTurn.cards[i].confront(this.auxCard)==1){//last played card defeats aux
 			fsmCP['play-card-w']();
 			this.auxCard = undefined;
 		}
-		else if(this.currentTurn.cards[i].confront(this.auxCard)==0){//last played card same weight as aux
+		else if(currentTurn.cards[i].confront(this.auxCard)==0){//last played card same weight as aux
 			fsmCP['play-card-s']();
 			this.auxCard = undefined;
 		}
-		else if(this.currentTurn.cards[i].confront(this.auxCard)==-1){//last played card defeated by aux
+		else if(currentTurn.cards[i].confront(this.auxCard)==-1){//last played card defeated by aux
 			fsmCP['play-card-l']();
 			this.auxCard = undefined;
 		}
-		delete this.currentTurn.cards[i];
+		delete currentTurn.cards[i];
 	}
 }
 
 /*
  * Let's Play :)
  */
-Round.prototype.play = function(action, value) {
+Round.prototype.play = function(action, value,player) {
 	// move to the next state
-	makePlay(action,value);
+	makePlay(action,value,this.fsm,this.fsmCP,player);
 	// check if is needed sum score
-	this.calculateScore(action);
+	this.calculateScore(action, this.fsm, this.fsmCP);
 
 	// Change player's turn
-	return this.changeTurn();
+	this.changeTurn(this.game);
 };
 
 module.exports.round = Round;

@@ -34,7 +34,7 @@ function Game(player1, player2){
   /*
    * Game's hand
    */
-  this.currentHand = 'player1';
+  this.currentHand = this.player1;
 
   /*
    * Game's hand
@@ -51,36 +51,34 @@ function Game(player1, player2){
  * Check if it's valid move and play in the current round
  */
 Game.prototype.play = function(player, action, value){
-	if(this.currentRound.currentTurn !== player)
-		throw new Error("[ERROR] INVALID TURN...");
+	if(this.currentRound.currentTurn !== player){
+		throw new Error("[ERROR] INVALID TURN...");}
 
-	if(this.currentRound.fsm.cannot(action))
-		throw new Error("[ERROR] INVALID MOVE...");
+	if(this.currentRound.fsm.cannot(action)){
+		throw new Error("[ERROR] INVALID MOVE...");}
 
-	return this.currentRound.play(action, value);
+	this.currentRound.play(action, value,player);
 };
 
-Game.prototype.changeTurn = function(){
-	if (this.currentHand.wonH != undefined){
-		if(this.currentHand.wonH.indexOf(this.currentRound.roundN)!=-1){
-			return this.currentHand;
-		}else{
-			 return this.currentHand = switchPlayer(this.currentHand);
-		}
+Game.prototype.changeHand = function(){
+	if(this.currentHand==this.player1){
+		return this.player2;
 	}
 	else{
-		return this.currentTurn = switchPlayer(this.currentTurn);
+		return this.player1;
 	}
 }
+
+
 /*
  * Create and return a new Round to this game
  */
-Game.prototype.newRound = function(numRound){
-  var round = new Round(this, this.currentHand,numRound);
-  this.currentRound = round;
-  this.currentHand = this.changeTurn();
-  this.rounds.push(round);
-  return this;
+Game.prototype.newRound = function(){
+	var round = new Round(this, this.currentHand);
+	this.currentRound = round;
+	this.currentHand = this.changeHand();
+	this.rounds.push(round);
+	return this;
 }
 
 function noCL(){
@@ -90,8 +88,5 @@ function noCL(){
 /*
  * returns the opossite player
  */
-function switchPlayer(player) {
-  return "player1" === player ? "player2" : "player1";
-};
 
 module.exports.game = Game;

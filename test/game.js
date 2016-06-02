@@ -42,26 +42,26 @@ describe('Game#play', function(){
   });
   
   it('plays [envido, no-quiero] should give 1 point to chanter', function(){
-	  game.play('player1', 'envido');
-	  game.play('player2', 'no-quiero-e');
+	  game.play(game.player1, 'envido');
+	  game.play(game.player2, 'no-quiero-e');
 	  expect(game.score==[1, 0]);
   });
   
   it('plays [envido, quiero] should give 2 points to winner', function(){
-	  game.play('player1', 'envido');
-	  game.play('player2', 'quiero-e');
+	  game.play(game.player1, 'envido');
+	  game.play(game.player2, 'quiero-e');
 	  expect(game.score).to.deep.equal([0, 2]);
   });
   
   it('plays [truco, quiero] should give 2 points to winner', function(){
-	  game.play('player1', 'truco');
-	  game.play('player2', 'quiero-t');
-	  game.play('player1', 'play-card',0);
-	  game.play('player2', 'play-card',0);
-	  game.play('player1', 'play-card',0);
-	  game.play('player2', 'play-card',0);
-	  game.play('player1', 'play-card',0);
-	  game.play('player2', 'play-card',0);
+	  game.play(game.player1, 'truco');
+	  game.play(game.player2, 'quiero-t');
+	  game.play(game.player1, 'play-card',0);
+	  game.play(game.player2, 'play-card',0);
+	  game.play(game.player1, 'play-card',0);
+	  game.play(game.player2, 'play-card',0);
+	  game.play(game.player1, 'play-card',0);
+	  game.play(game.player2, 'play-card',0);
 	  expect(game.score==[2, 0]);
   });
 
