@@ -10,6 +10,8 @@ var _ = require('lodash');
 var StateMachine = require("../node_modules/javascript-state-machine/state-machine.js");
 var deckModel = require("./deck");
 var Deck  = deckModel.deck;
+var cardModel = require('./card');
+var Card = cardModel.card;
 
 function newTrucoFSM(){
   var fsm = StateMachine.create({
@@ -26,12 +28,51 @@ function newTrucoFSM(){
     { name: 'no-quiero-t', 	from: ['truco'],              		to: 'no-quiero-t' },
     { name: 'play-card', 	from: ['quiero-e', 'no-quiero-e',
                          	       'first-card', 'played-card'],to: 'played-card' },
-    { name: 'play-card', 	from: ['quiero-t'],              	to: 'play-card-t' },
+    { name: 'play-card', 	from: ['quiero-t'],              	to: 'play-card-t' }
   ]});
 
   return fsm;
 }
 
+function newPlayedFSM(){
+	  var fsm = StateMachine.create({
+	  initial: 'init',
+	  events: [
+	     { name: 'play-card', 	from: 'init',     				to: 'first-card' },
+	     
+	     { name: 'play-card-w', from: 'first-card',				to: 'p2-won-1st'  },
+	     { name: 'play-card-s', from: 'first-card',				to: 'pardas'  },
+	     { name: 'play-card-l', from: 'first-card',				to: 'p1-won-1st'  },
+	     
+	     { name: 'play-card', 	from: 'p2-won-1st',				to: 'third-card-2'  },
+	     { name: 'play-card', 	from: ['pardas',
+	                          	       'definitive-hand'],		to: 'definitive-hand'  },
+	     { name: 'play-card', 	from: 'p1-won-1st',			 	to: 'third-card-1'  },
+	     
+	     { name: 'play-card-w', from: 'third-card-2',			to: '1vs1-2'  },
+	     { name: 'play-card-s', from: 'third-card-2',			to: 'p2-wins'  },
+	     { name: 'play-card-l', from: 'third-card-2',			to: 'p2-wins'  },
+	     { name: 'play-card-w', from: 'definitive-hand',		to: 'p2-wins'  },
+	     { name: 'play-card-s', from: 'definitive-hand',		to: 'definitive-hand'  },
+	     { name: 'play-card-l', from: 'definitive-hand',		to: 'p1-wins'  },
+	     { name: 'play-card-w', from: 'third-card-1',			to: '1vs1-1'  },
+	     { name: 'play-card-s', from: 'third-card-1',			to: 'p1-wins'  },
+	     { name: 'play-card-l', from: 'third-card-1',			to: 'p1-wins'  },
+	     
+	     { name: 'play-card', 	from: '1vs1-2',				 	to: 'fifth-card-2'  },
+	     { name: 'play-card', 	from: '1vs1-1',				 	to: 'fifth-card-1'  },
+	     
+	     { name: 'play-card-w', from: 'fifth-card-2',			to: 'p2-wins'  },
+	     { name: 'play-card-s', from: 'fifth-card-2',			to: 'p2-wins'  },
+	     { name: 'play-card-l', from: 'third-card-2',			to: 'p1-wins'  },
+	     { name: 'play-card-w', from: 'fifth-card-1',			to: 'p1-wins'  },
+	     { name: 'play-card-s', from: 'fifth-card-1',			to: 'p1-wins'  },
+	     { name: 'play-card-l', from: 'third-card-1',			to: 'p2-wins'  },
+	     
+	  ]});
+
+	  return fsm;
+	}
 
 function Round(game,turn,roundN){
   //Game
@@ -42,10 +83,10 @@ function Round(game,turn,roundN){
 
   //here is a FSM to perform user's actions
   this.fsm = newTrucoFSM();
-
-  this.status = 'running';
   
-  this.nHand = roundN;
+  this.fsmCP = newPlayedFSM();
+
+  this.auxCard = undefined;
   
   //Round' score
   this.score = [0, 0];
@@ -85,21 +126,14 @@ Round.prototype.calculateScore = function(action){
 		if (this.game.player1.envidoPoints<this.game.player2.envidoPoints){
 			this.score = [0, 2];
 		}else{ this.score = [2, 0];}
-	}else if (action=='no-quiero-e'){
-		this.score[1,0];
-	}else if(action=='no-quiero-t'){
-		this.score[1,0];
-	}else if(action=='play-card' && tsm=='play-card-t' && game.noCL()){
-		if(game.player1.wonH.size()>=game.player2.wonH.size()){
-			this.score[2,0];
-		}else{this.score[0,2];}
-	}else if(action=='play-card' && tsm=='played-card' && game.noCL()){
-		if(game.player1.wonH.size()>=game.player2.wonH.size()){
-			this.score[1,0];
-		}else{this.score[0,1];}
-	}else{
-		this.score[0,0];
 	}
+	else if (action=='no-quiero-e'){this.score[1,0];}
+	else if	(action=='no-quiero-t'){this.score[1,0];}
+	else if (action=='play-card'){
+		
+	}
+	
+	
 	this.game.score[0] += this.score[0];
 	this.game.score[1] += this.score[1];
 
@@ -107,17 +141,25 @@ Round.prototype.calculateScore = function(action){
 }
 
 function makePlay(action,i){
+	this.fsm[action]();
 	if(action=='play-card'){
-		this.game.currentHand.playedCards.push[currentHand.cards[i]]; 
-		delete game.currentHand.cards[i];
-		if(this.game.player1.playedCards.size() == roundN == this.game.player2.playedCards.size()){
-			if (this.game.player1.playedCards[roundN].confront(this.game.player1.playedCards[roundN].confront)==1){
-				this.game.player1.wonH.push(this.roundN);
-			}
-			else{
-				this.game.player2.wonH.push(this.roundN);
-			}
+		if (this.auxCard==undefined){
+			fsmCP['play-card']();
+			this.auxCard =this.currentTurn.cards[i];
 		}
+		else if(this.currentTurn.cards[i].confront(this.auxCard)==1){//last played card defeats aux
+			fsmCP['play-card-w']();
+			this.auxCard = undefined;
+		}
+		else if(this.currentTurn.cards[i].confront(this.auxCard)==0){//last played card same weight as aux
+			fsmCP['play-card-s']();
+			this.auxCard = undefined;
+		}
+		else if(this.currentTurn.cards[i].confront(this.auxCard)==-1){//last played card defeated by aux
+			fsmCP['play-card-l']();
+			this.auxCard = undefined;
+		}
+		delete this.currentTurn.cards[i];
 	}
 }
 
@@ -126,7 +168,6 @@ function makePlay(action,i){
  */
 Round.prototype.play = function(action, value) {
 	// move to the next state
-	this.fsm[action]();
 	makePlay(action,value);
 	// check if is needed sum score
 	this.calculateScore(action);
