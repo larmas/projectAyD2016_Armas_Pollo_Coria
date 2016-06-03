@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 /node_modules/
+=======
+/.settings/
+/node_modules/
+/.project/
+>>>>>>> envido-truco
 *.swp

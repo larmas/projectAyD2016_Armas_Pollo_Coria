@@ -15,6 +15,7 @@ function Player(name) {
    */
   this.cards = [];
 
+  this.playedCards = [];
   /*
    * user envido points
    */
@@ -47,6 +48,5 @@ Player.prototype.points = function(){
 
   return _.max(pairValues);
 };
-
 
 module.exports.player = Player;
