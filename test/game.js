@@ -56,13 +56,27 @@ describe('Game#play', function(){
   it('plays [truco, quiero] should give 2 points to winner', function(){
 	  game.play(game.player1, 'truco');
 	  game.play(game.player2, 'quiero-t');
-	  game.play(game.player1, 'play-card',0);
-	  game.play(game.player2, 'play-card',0);
-	  game.play(game.player1, 'play-card',0);
-	  game.play(game.player2, 'play-card',0);
+	  game.play(game.player1, 'play-card',2);
+	  game.play(game.player2, 'play-card',2);
+	  game.play(game.player1, 'play-card',1);
+	  game.play(game.player2, 'play-card',1);
 	  game.play(game.player1, 'play-card',0);
 	  game.play(game.player2, 'play-card',0);
 	  expect(game.score==[2, 0]);
+  });
+  
+  it('plays [envido, quiero, truco, quiero] score should be [2,2]', function(){
+	  game.play(game.player1, 'envido');
+	  game.play(game.player2, 'quiero-e');
+	  game.play(game.player1, 'truco');
+	  game.play(game.player2, 'quiero-t');
+	  game.play(game.player1, 'play-card',2);
+	  game.play(game.player2, 'play-card',2);
+	  game.play(game.player1, 'play-card',1);
+	  game.play(game.player2, 'play-card',1);
+	  game.play(game.player1, 'play-card',0);
+	  game.play(game.player2, 'play-card',0);
+	  expect(game.score===[2,2]);
   });
 
 });
