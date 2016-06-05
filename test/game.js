@@ -37,14 +37,15 @@ describe('Game#play', function(){
   });
 
   it('It should stablish 29 n 33 as envidoPoints ', function(){
-	  var x=[game.player1.envidoPoints, game.player2.envidoPoints];
-	  expect(x==[29, 33]);
+	  var x=[];
+	  var y =[29,33];
+	  expect([game.player1.envidoPoints, game.player2.envidoPoints]).to.deep.equal([29,33]);
   });
   
   it('plays [envido, no-quiero] should give 1 point to chanter', function(){
 	  game.play(game.player1, 'envido');
 	  game.play(game.player2, 'no-quiero-e');
-	  expect(game.score==[1, 0]);
+	  expect(game.score).to.deep.equal([1, 0]);
   });
   
   it('plays [envido, quiero] should give 2 points to winner', function(){
@@ -62,7 +63,7 @@ describe('Game#play', function(){
 	  game.play(game.player2, 'play-card',1);
 	  game.play(game.player1, 'play-card',0);
 	  game.play(game.player2, 'play-card',0);
-	  expect(game.score==[2, 0]);
+	  expect(game.score).to.deep.equal([2, 0]);
   });
   
   it('plays [envido, quiero, truco, quiero] score should be [2,2]', function(){
@@ -76,7 +77,7 @@ describe('Game#play', function(){
 	  game.play(game.player2, 'play-card',1);
 	  game.play(game.player1, 'play-card',0);
 	  game.play(game.player2, 'play-card',0);
-	  expect(game.score===[2,2]);
+	  expect(game.score).to.deep.equal([2,2]);
   });
 
 });

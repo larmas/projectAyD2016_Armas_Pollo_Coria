@@ -160,12 +160,12 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP,currentTurn){
 	else if (action=='quiero-e-e-re')		{if(auxEn){this.score=[0,7];} else{this.score=[7,0];}}
 	else if (action=='quiero-fe')			{if(auxEn){this.score=[0,x];} else{this.score=[y,0];}}	
 	
-	else if (action=='no-quiero-e')			{if(auxEn){this.score=[0,1];} else{this.score=[1,0];}}
-	else if (action=='no-quiero-e-e')		{if(auxEn){this.score=[0,2];} else{this.score=[2,0];}}
-	else if (action=='no-quiero-re')		{if(auxEn){this.score=[0,1];} else{this.score=[1,0];}}
-	else if (action=='no-quiero-e-re')		{if(auxEn){this.score=[0,2];} else{this.score=[2,0];}}
-	else if (action=='no-quiero-e-e-re')	{if(auxEn){this.score=[0,3];} else{this.score=[3,0];}}
-	else if (action=='no-quiero-fe')		{if(auxEn){this.score=[0,1];} else{this.score=[1,0];}}
+	else if (action=='no-quiero-e')			{if(aux){this.score=[0,1];} else{this.score=[1,0];}}
+	else if (action=='no-quiero-e-e')		{if(aux){this.score=[0,2];} else{this.score=[2,0];}}
+	else if (action=='no-quiero-re')		{if(aux){this.score=[0,1];} else{this.score=[1,0];}}
+	else if (action=='no-quiero-e-re')		{if(aux){this.score=[0,2];} else{this.score=[2,0];}}
+	else if (action=='no-quiero-e-e-re')	{if(aux){this.score=[0,3];} else{this.score=[3,0];}}
+	else if (action=='no-quiero-fe')		{if(aux){this.score=[0,1];} else{this.score=[1,0];}}
 	
 	else if (action=='no-quiero-t')		{if(aux){this.score=[0,1];} else{this.score=[1,0];}}
 	else if (action=='no-quiero-rt')	{if(aux){this.score=[0,2];} else{this.score=[2,0];}}
@@ -228,6 +228,7 @@ Round.prototype.checkStatus= function(fsmCP){
 /********************************************************/
 Round.prototype.play = function(action, value,player) {
 	// move to next states
+	this.score=[0,0];
 	makePlay(action,value,this.fsm,this.fsmCP,player);
 	
 	// check if is needed sum score
