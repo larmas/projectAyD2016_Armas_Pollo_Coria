@@ -16,16 +16,16 @@ var Round  = roundModel.round;
 
 function Game(player1, player2){
 	//Player 1
-	this.player1 = new Player("player 1");
+	this.player1 = player1;
 
   	// Player 2
-  	this.player2 = new Player("player 2");
+  	this.player2 = player2;
 
   	// sequence of previous Rounds
   	this.rounds = [];
 
   	//Game's hand
-  	this.currentHand = this.player1;
+  	this.currentHand = player1;
 
   	//Game's hand
   	this.currentRound = undefined;
@@ -44,16 +44,19 @@ Game.prototype.play = function(player, action, value){
 			throw new Error("[ERROR] INVALID MOVE...");
 		}
 	}
-		
-
 	return this.currentRound.play(action, value,player);
 };
 
 Game.prototype.changeHand = function(){
-	if(this.currentHand==this.player1){
-		return this.player2;
-	}else{
+	if (this.currentHand == undefined){
 		return this.player1;
+	}
+	else{
+		if(this.currentHand==this.player1){
+			return this.player2;
+		}else{
+			return this.player1;
+		}
 	}
 }
 
@@ -61,20 +64,10 @@ Game.prototype.changeHand = function(){
 Game.prototype.newRound = function(){
 	var round = new Round(this, this.currentHand);
 	this.currentRound = round;
-	this.currentHand = this.changeHand();
 	this.rounds.push(round);
+	this.currentHand=this.changeHand;
 	return this;
 }
 
-function StartGame(){
-	while((this.score[0]<30) && (this.score[1]<30)){
-		var aux = this.player1;
-		while(this.currentRound.status='running'){
-			prompt(action,value);
-			aux = this.play(aux,action,value);
-		}
-		this.newRound();
-	}
-}
 
 module.exports.game = Game;

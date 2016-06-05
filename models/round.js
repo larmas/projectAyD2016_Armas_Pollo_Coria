@@ -107,6 +107,7 @@ function Round(game,turn){
 	this.game = game;
   
 	//next turn
+	this.currentHand = turn;
 	this.currentTurn = turn;
 
 	//FSMs to perform user's actions
@@ -153,40 +154,45 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP,currentTurn){
 	auxEn =	this.game.player1.envidoPoints<this.game.player2.envidoPoints;
 	x=30-this.game.score[0];//puntos faltan j1
 	y=30-this.game.score[1];//puntos faltan j2
-	if(action == 'quiero-e')				{if(auxEn){this.score=[0,2];} else{this.score=[2,0];}}
-	else if (action=='quiero-e-e')			{if(auxEn){this.score=[0,4];} else{this.score=[4,0];}}
-	else if (action=='quiero-re')			{if(auxEn){this.score=[0,3];} else{this.score=[3,0];}}
-	else if (action=='quiero-e-re')			{if(auxEn){this.score=[0,5];} else{this.score=[5,0];}}
-	else if (action=='quiero-e-e-re')		{if(auxEn){this.score=[0,7];} else{this.score=[7,0];}}
-	else if (action=='quiero-fe')			{if(auxEn){this.score=[0,x];} else{this.score=[y,0];}}	
+	var scoreX=[0,0];
 	
-	else if (action=='no-quiero-e')			{if(aux){this.score=[0,1];} else{this.score=[1,0];}}
-	else if (action=='no-quiero-e-e')		{if(aux){this.score=[0,2];} else{this.score=[2,0];}}
-	else if (action=='no-quiero-re')		{if(aux){this.score=[0,1];} else{this.score=[1,0];}}
-	else if (action=='no-quiero-e-re')		{if(aux){this.score=[0,2];} else{this.score=[2,0];}}
-	else if (action=='no-quiero-e-e-re')	{if(aux){this.score=[0,3];} else{this.score=[3,0];}}
-	else if (action=='no-quiero-fe')		{if(aux){this.score=[0,1];} else{this.score=[1,0];}}
+	if(action == 'quiero-e')					{if(auxEn){scoreX=[0,2];} else{scoreX=[2,0];}}
+	else if (action=='quiero-e-e')				{if(auxEn){scoreX=[0,4];} else{scoreX=[4,0];}}
+	else if (action=='quiero-re')				{if(auxEn){scoreX=[0,3];} else{scoreX=[3,0];}}
+	else if (action=='quiero-e-re')				{if(auxEn){scoreX=[0,5];} else{scoreX=[5,0];}}
+	else if (action=='quiero-e-e-re')			{if(auxEn){scoreX=[0,7];} else{scoreX=[7,0];}}
+	else if (action=='quiero-fe')				{if(auxEn){scoreX=[0,x];} else{scoreX=[y,0];}}	
 	
-	else if (action=='no-quiero-t')		{if(aux){this.score=[0,1];} else{this.score=[1,0];}}
-	else if (action=='no-quiero-rt')	{if(aux){this.score=[0,2];} else{this.score=[2,0];}}
-	else if (action=='no-quiero-v4')	{if(aux){this.score=[0,3];} else{this.score=[3,0];}}
+	else if (action=='no-quiero-e')				{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+	else if (action=='no-quiero-e-e')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+	else if (action=='no-quiero-re')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+	else if (action=='no-quiero-e-re')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+	else if (action=='no-quiero-e-e-re')		{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
+	else if (action=='no-quiero-fe')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+	
+	else if (action=='no-quiero-t')				{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+	else if (action=='no-quiero-rt')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+	else if (action=='no-quiero-v4')			{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
 	
 	else if (action=='play-card'){
 		if(fsmCP.current=='p1-wins'){
-			if(fsm.current=='quiero-t')			{if(aux2){this.score = [2, 0];}else{this.score = [0, 2];}}
-			else if(fsm.current=='quiero-rt')	{if(aux2){this.score = [3, 0];}else{this.score = [0, 3];}}
-			else if(fsm.current=='quiero-v4')	{if(aux2){this.score = [4, 0];}else{this.score = [0, 4];}}
-			else 								{if(aux2){this.score = [1, 0];}else{this.score = [0, 1];}}
+			if(fsm.current=='quiero-t')			{if(aux2){scoreX=[2,0];} else{scoreX=[0,2];}}
+			else if(fsm.current=='quiero-rt')	{if(aux2){scoreX=[3,0];} else{scoreX=[0,3];}}
+			else if(fsm.current=='quiero-v4')	{if(aux2){scoreX=[4,0];} else{scoreX=[0,4];}}
+			else 								{if(aux2){scoreX=[1,0];} else{scoreX=[0,1];}}
 		}else if(fsmCP.current=='p2-wins'){
-			if(fsm.current=='quiero-t')			{if(aux2){this.score = [0, 2];}else{this.score = [2, 0];}}
-			else if(fsm.current=='quiero-rt')	{if(aux2){this.score = [0, 3];}else{this.score = [3, 0];}}
-			else if(fsm.current=='quiero-v4')	{if(aux2){this.score = [0, 4];}else{this.score = [4, 0];}}
-			else 								{if(aux2){this.score = [0, 1];}else{this.score = [1, 0];}}
+			if(fsm.current=='quiero-t')			{if(aux2){scoreX=[0,2];} else{scoreX=[2,0];}}
+			else if(fsm.current=='quiero-rt')	{if(aux2){scoreX=[0,3];} else{scoreX=[3,0];}}
+			else if(fsm.current=='quiero-v4')	{if(aux2){scoreX=[0,4];} else{scoreX=[4,0];}}
+			else 								{if(aux2){scoreX=[0,1];} else{scoreX=[1,0];}}
 		}
 	}
 	
-	this.game.score[0] += this.score[0];
-	this.game.score[1] += this.score[1];
+	this.score[0] += scoreX[0];
+	this.score[1] += scoreX[1];
+	
+	this.game.score[0] += scoreX[0];
+	this.game.score[1] += scoreX[1];
 
 	return this.score;
 }
@@ -228,7 +234,6 @@ Round.prototype.checkStatus= function(fsmCP){
 /********************************************************/
 Round.prototype.play = function(action, value,player) {
 	// move to next states
-	this.score=[0,0];
 	makePlay(action,value,this.fsm,this.fsmCP,player);
 	
 	// check if is needed sum score

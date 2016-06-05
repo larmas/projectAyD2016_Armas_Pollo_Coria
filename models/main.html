@@ -13,9 +13,25 @@
 			var player1=new Player("Mariano");
 			var player2=new Player("Leandro");
 			var myGame = new Game(player1,player2);
-			var myRound = new Round(myGame,player1,1);
-			myRound.deal();
-			document.write(myRound.game.player1.envidoPoints,"<br />");
+			document.write("dsfgafgd");
+			myGame.newRound();/************html stops here, to verify******************/
+			document.write("dsfgafgd");
+			myGame.currentRound.deal();
+			var aux = myGame.player1;
+			var action;
+			var value;
+			while((myGame.score[0]<30) && (myGame.score[1]<30)){
+				while(myGame.currentRound.status='running'){
+					document.write("Player 1: "+myGame.score[0]+" points"+ "<br />");
+					document.write("Player 2: "+myGame.score[1]+" points"+ "<br />");
+					action = prompt("Next Action:");
+					if (action=='play-card'){
+						value=prompt("card value:");
+					}
+					aux = myGame.play(aux,action,value);
+				}
+				myGame.newRound();
+			}
 		</script>
 	</body>
 </html>

@@ -6,28 +6,28 @@ var round_model   = require("../models/round");
 
 var Game  = game_model.game;
 var Round = round_model.round;
+var Player= player_model.player;
 
 describe('Round', function(){
- var game;
+	var game;
 
   beforeEach(function(){
-    game = new Game();
+	var player1 = new Player("player 1");
+	var player2 = new Player("player 2");
+    game = new Game(player1, player2);
     game.newRound();
   });
 
   describe("#deal", function(){
     it("should populate player1 cards", function(){
-      var round = new Round(game);
-      round.deal();
-
+      game.currentRound.deal();
       expect(game.player1.cards.length).to.be.equal(3);
     });
 
     it("should populate player2 cards", function(){
-      var round = new Round(game);
-      round.deal();
-
+      game.currentRound.deal();
       expect(game.player2.cards.length).to.be.equal(3);
     });
+    
   });
 });
