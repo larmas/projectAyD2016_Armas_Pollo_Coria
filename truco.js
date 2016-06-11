@@ -58,26 +58,6 @@ app.post('/process', function(req,res){
   console.log('Question : ' + req.body.ques);
   res.redirect(303, '/thankyou');
 });
-/*
-app.get('/file-upload', function(req, res){
-  var now = new Date();
-  res.render('file-upload',{
-    year: now.getFullYear(),
-    month: now.getMonth() });
-  });*/
-/*
-app.post('/file-upload/:year/:month',
-  function(req, res){
-    var form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields, file){
-      if(err)
-        return res.redirect(303, '/error');
-      console.log('Received File');
-
-      console.log(file);
-      res.redirect( 303, '/thankyou');
-  });
-});*/
 
 app.get('/cookie', function(req, res){
   res.cookie('username', 'Derek Banas', {expire: new Date() + 9999}).send('username has the value of Derek Banas');
@@ -117,38 +97,6 @@ app.use(function(req, res, next){
   next();
 
 });
-/*
-app.get('/viewcount', function(req, res, next){
-  res.send('You viewed this page ' + req.session.views['/viewcount'] + ' times');
-});
-
-var fs = require("fs");
-
-app.get('/readfile', function(req, res, next){
-  fs.readFile('./public/randomfile.txt', function(err, data){
-      if(err){
-        return console.error(err);
-      }
-      res.send("the File : " + data.toString());
-  });
-});
-
-app.get('/writefile', function(req, res, next){
-  fs.writeFile('./public/randomfile2.txt',
-    'More random text', function(err){
-      if(err){
-        return console.error(err);
-      }
-    });
-
-  fs.readFile('./public/randomfile2.txt', function(err, data){
-    if(err){
-      return console.error(err);
-    }
-    res.send("The File " + data.toString());
-  });
-
-});*/
 
 app.use(function(req, res){
   res.type('text/html');
