@@ -33,19 +33,19 @@ describe('Card', function() {
     describe("when this is better than argument", function(){
       it("should returns 1", function(){
         expect(c.confront(x)).to.be.eq(1);
-      })
+      });
     });
 
     describe("when this is worst than argument", function(){
       it("should returns -1", function(){
-        expect(x.confront(c)).to.be.eq-(1);
-      })
+        expect(x.confront(c)).to.be.eq(-(1));
+      });
     });
 
     describe("when this is better than argument", function(){
       it("should returns 1", function(){
         expect(y.confront(x)).to.be.eq(0);
-      })
+      });
     });
   });
 });

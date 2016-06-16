@@ -6,6 +6,7 @@
 		<script type= "text/javascript" src="card.js"> </script>
 		<script type= "text/javascript" src="deck.js"> </script>
 		<script type= "text/javascript" src="round.js"> </script>
+		<script type= "text/javascript" src="../node_modules/javascript-state-machine/state-machine.js"> </script>
 	</head>
 
 	<body>
@@ -13,10 +14,9 @@
 			var player1=new Player("Mariano");
 			var player2=new Player("Leandro");
 			var myGame = new Game(player1,player2);
-			document.write("dsfgafgd");
-			myGame.newRound();/************html stops here, to verify******************/
-			document.write("dsfgafgd");
+			myGame.newRound();
 			myGame.currentRound.deal();
+			myGame.changeHand();
 			var aux = myGame.player1;
 			var action;
 			var value;
@@ -24,6 +24,11 @@
 				while(myGame.currentRound.status='running'){
 					document.write("Player 1: "+myGame.score[0]+" points"+ "<br />");
 					document.write("Player 2: "+myGame.score[1]+" points"+ "<br />");
+					document.write("turn: "+aux.name+ "<br />");
+					while(i<aux.cards.size()){
+						document.write("1: "+aux.cards[i]+" points"+ "<br />");
+						i++;
+					}
 					action = prompt("Next Action:");
 					if (action=='play-card'){
 						value=prompt("card value:");

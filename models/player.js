@@ -22,6 +22,8 @@ function Player(name) {
   this.envidoPoints = 0;
   
   this.wonH=[];
+  
+  this.allowed= true;
 }
 
 /*
@@ -30,7 +32,7 @@ function Player(name) {
 Player.prototype.setCards = function(cards){
   this.cards = cards;
   this.envidoPoints = this.points();
-}
+};
 
 /*
  * Returns the user envido points

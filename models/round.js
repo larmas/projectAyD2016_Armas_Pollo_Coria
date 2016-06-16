@@ -18,6 +18,7 @@ function newTrucoFSM(){
 		initial: 'init',
 		events: 
 			[{ name: 'play-card', 		from: 'init',     					to: 'first-card' },
+			 { name: 'play-card', 		from: ['first-card','played-card'],	to: 'played-card' },
 			 { name: 'envido',    		from: ['init', 'first-card'],		to: 'envido' },
 			 { name: 'envido',    		from: ['envido'],					to: 'envido-e' },
 			 { name: 'real-envido',		from: ['init', 'first-card'],		to: 'real-envido' },
@@ -27,7 +28,6 @@ function newTrucoFSM(){
 			                        	       'envido','real-envido',
 			                        	       'envido-e','envido-re',
 			                        	       'envido-e-re'],				to: 'f-envido'},
-			 
 			 { name: 'quiero-e',    	from: ['envido'],        			to: 'quiero-e'  },
 			 { name: 'quiero-e-e',    	from: ['envido-e'],        			to: 'quiero-e-e'  },
 			 { name: 'quiero-re',    	from: ['real-envido'],        		to: 'quiero-re'  },
@@ -61,7 +61,7 @@ function newTrucoFSM(){
 			 
 		]});
 	return fsm;
-}
+};
 
 function newPlayedFSM(){
 	var fsm = StateMachine.create({
@@ -100,27 +100,25 @@ function newPlayedFSM(){
 	     { name: 'play-card-l', from: 'fifth-card-1',			to: 'p2-wins'  },	     
 	]});
 	return fsm;
-}
+};
 
 function Round(game,turn){
 	//Game
 	this.game = game;
-  
 	//next turn
 	this.currentHand = turn;
 	this.currentTurn = turn;
-
+	
 	//FSMs to perform user's actions
+	
 	this.fsm = newTrucoFSM();
 	this.fsmCP = newPlayedFSM();
-  
 	this.auxCard = undefined;
-  
 	//Round's score
 	this.score = [0, 0];
-	
 	this.status='running';
-}
+
+};
 
 /* Generates a new deck shuffled and gives to players the correspondent cards */
 Round.prototype.deal = function(){
@@ -136,7 +134,7 @@ Round.prototype.changeTurn = function(game){
 	else{
 		return this.currentTurn = this.switchPlayer(this.currentTurn,game);
 	}
-}
+};
 
 /* returns the opposite player */
 Round.prototype.switchPlayer=function (player,game) {
@@ -195,11 +193,11 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP,currentTurn){
 	this.game.score[1] += scoreX[1];
 
 	return this.score;
-}
+};
 
-function makePlay(action,i,fsm,fsmCP,currentTurn){
+Round.prototype.makePlay = function (action,i,fsm,fsmCP,currentTurn){
 	if(action=='play-card'){
-		if(fsm.current=='init'){
+		if(fsm.current=='init'||fsm.current=='first-card'){
 			fsm[action]();
 		}
 		if (this.auxCard == undefined){
@@ -222,7 +220,7 @@ function makePlay(action,i,fsm,fsmCP,currentTurn){
 	}else{
 		fsm[action]();
 	}
-}
+};
 
 Round.prototype.checkStatus= function(fsmCP){
 	if ((fsmCP.current=='p1-wins') || (fsmCP.current=='p2-wins') || (fsmCP.current=='no-quiero-t') ||
@@ -234,7 +232,7 @@ Round.prototype.checkStatus= function(fsmCP){
 /********************************************************/
 Round.prototype.play = function(action, value,player) {
 	// move to next states
-	makePlay(action,value,this.fsm,this.fsmCP,player);
+	this.makePlay(action,value,this.fsm,this.fsmCP,player);
 	
 	// check if is needed sum score
 	this.calculateScore(action, this.fsm, this.fsmCP);

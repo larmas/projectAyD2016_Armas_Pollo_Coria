@@ -32,14 +32,15 @@ function Game(player1, player2){
 
   	//Game's score
   	this.score = [0, 0];
-}
+  	
+};
 
 /* Check if it's valid move and play in the current round */
 Game.prototype.play = function(player, action, value){
 	if(this.currentRound.currentTurn !== player){
 		throw new Error("[ERROR] INVALID TURN...");}
 
-	if (this.currentRound.fsm.current=='init' || action!='play-card'){
+	if (this.currentRound.fsm.current=='init' || this.currentRound.fsm.current=='first-card' || action!='play-card'){
 		if(this.currentRound.fsm.cannot(action)){
 			throw new Error("[ERROR] INVALID MOVE...");
 		}
@@ -48,26 +49,27 @@ Game.prototype.play = function(player, action, value){
 };
 
 Game.prototype.changeHand = function(){
+
 	if (this.currentHand == undefined){
-		return this.player1;
+		this.currentHand = this.player1;
 	}
 	else{
 		if(this.currentHand==this.player1){
-			return this.player2;
+			this.currentHand = this.player2;
 		}else{
-			return this.player1;
+			this.currentHand = this.player1;
 		}
 	}
-}
+};
 
 /* Create and return a new Round to this game */
-Game.prototype.newRound = function(){
+Game.prototype.newRound = function (){
 	var round = new Round(this, this.currentHand);
 	this.currentRound = round;
 	this.rounds.push(round);
-	this.currentHand=this.changeHand;
+	this.changeHand();
 	return this;
-}
+};
 
 
 module.exports.game = Game;
