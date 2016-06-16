@@ -44,7 +44,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // mongoose
-//mongoose.connect('mongodb://localhost/truco-development');
+mongoose.connect('mongodb://localhost/truco-development');
 
 app.use('/', routes);
 app.use(function(req, res, next){

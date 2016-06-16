@@ -2,9 +2,7 @@ extends main
 block content
   html
     body
-      .page-header
-        h3
-      .Register
+      .register
         form(role='form', action='/register', method='POST')
           .jumbotron
             span#titlefont Registration
@@ -21,7 +19,7 @@ block content
                 label.col-sm-2.control-label(for='fieldPass')
                   | Password
                 .col-sm-4
-                  input#fieldPass.form-control(type='text', name='password')
+                  input#fieldPass.form-control(type='password', name='password')
               // End of form-group
             p    
             p
