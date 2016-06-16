@@ -16,6 +16,10 @@ var UserSchema = new Schema({
   password: String
 });
 
+UserSchema.methods.authenticate = function (password) {
+    return this.password === this.password;//line 63
+};
+
 //var User = mongoose.model('User', UserSchema);
 UserSchema.plugin(passportLocalMongoose);
  

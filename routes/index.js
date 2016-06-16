@@ -18,13 +18,15 @@ router.get('/register', function(req, res) {
 router.post('/register', function(req, res) {
 	console.log('Name : ' + req.body.username);
 	console.log('Pass : ' + req.body.password);
-    User.register(new User({username: req.body.username , password: req.body.password}), function(err, user) {
+	user=new User({username: req.body.username , password: req.body.password});
+    User.register(function(err, user) {
         if (err) {
             return res.render('404', { user : user });
         }else{
-        	passport.authenticate('local')(req, res, function () {
+        	user.save();
+        	//passport.authenticate('local')(req, res, function () {
             res.redirect('/');
-        	});
+        	//});
         }
     });
 });

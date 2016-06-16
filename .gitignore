@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 /node_modules/
-=======
 /data/
 /.settings/
 /node_modules/
 /.project/
 /server.js/
->>>>>>> envido-truco
-*.swp
