@@ -1,0 +1,14 @@
+extends main
+block content
+  body
+    .page-header
+      h3
+    .home
+      // jumbotron enlarges fonts and puts everything in a gray box with rounded corners. If jumbotron is outside a container it fills the total width. You can change the styles by placing the changes after the Bootstrap CDN link
+      .jumbotron
+        span#titlefont Welcome to Truco
+        p
+        span#sbfont Let's play
+        p
+          a.btn.btn-info.btn-lg(href='/register', role='button') Sign In
+          a.btn.btn-warning.btn-lg(href='/login', role='button') Log In

@@ -1,0 +1,31 @@
+extends main
+block content
+  body
+    .page-header
+      h3
+    .contactUs
+      form.formContactUs(role='form', action='/process?form=contactus', method='POST')
+        input(type='hidden', name='_csrf', value='{{csrf}}')
+        .jumbotron
+          span#titlefont Contact Us
+          p
+          span#sbfont Send Us your Questions
+          p
+            .form-group
+              label.col-sm-2.control-label(for='fieldEmail')
+                | Email
+              .col-sm-4
+                input#fieldEmail.form-control(type='text', name='email')
+            // End of form-group
+            .form-group
+              label.col-sm-2.control-label(for='fieldQues')
+                | Question
+              .col-sm-4
+                input#fieldQues.form-control(type='text', name='ques')
+            // End of form-group
+            .form-group
+              .col-sm-4
+                button.btn.btn-info(type='submit') Submit
+                a.btn.btn-danger.btn-default(href='/', role='button') Cancel
+            // End of form-group
+    // End of contactUs

@@ -1,0 +1,33 @@
+extends main
+block content
+  html
+    body
+      .page-header
+        h3
+      .Register
+        form(role='form', action='/register', method='POST')
+          .jumbotron
+            span#titlefont Registration
+            p
+            span#sbfont Sign In!
+            p
+              .form-group
+                label.col-sm-2.control-label(for='fieldName')
+                  | Userame
+                .col-sm-4
+                  input#fieldName.form-control(type='text', name='username')
+              // End of form-group
+              .form-group
+                label.col-sm-2.control-label(for='fieldPass')
+                  | Password
+                .col-sm-4
+                  input#fieldPass.form-control(type='text', name='password')
+              // End of form-group
+            p    
+            p
+              .form-group
+                .col-sm-4
+                  button.btn.btn-info(type='submit') Submit
+                  a.btn.btn-danger.btn-default(href='/', role='button') Cancel
+              // End of form-group
+      // End of Register
