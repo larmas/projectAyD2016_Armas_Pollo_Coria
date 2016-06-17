@@ -1,0 +1,44 @@
+extends main
+block content
+  body
+    form(role='form', action='/round', method='POST')
+      .jumbotron
+        span#sbfont #{myGame.player1.name}: #{myGame.score[0]] | #{myGame.player2.name}: #{myGame.score[1]}
+        if(myGame.currentRound.currentTurn==myGame.player1)
+          p #{myGame.player1.name}'s turn: 
+          if(myGame.player1.cards[0]!=undefined)
+            p 0) #{myGame.player1.cards[0].show()}
+          if(myGame.player1.cards[1]!=undefined)
+            p 1) #{myGame.player1.cards[1].show()}
+          if(myGame.player1.cards[2]!=undefined)
+            p 2) #{myGame.player1.cards[2].show()}
+        if(myGame.currentRound.currentTurn!=myGame.player1)
+          p #{myGame.player2.name}'s turn:
+          if(myGame.player2.cards[0]!=undefined)
+            p 0) #{myGame.player2.cards[0].show()}
+          if(myGame.player2.cards[1]!=undefined)
+            p 1) #{myGame.player2.cards[1].show()}
+          if(myGame.player2.cards[2]!=undefined) 
+            p 2) #{myGame.player2.cards[2].show()}
+        p
+          .form-group
+            label.col-sm-2.control-label(for='fieldAction')
+              | Action
+            .col-sm-4
+              input#fieldAction.form-control(type='text', name='action')
+          // End of form-group
+          .form-group
+            label.col-sm-2.control-label(for='fieldValue')
+              | Value
+            .col-sm-4
+              input#fieldValue.form-control(type='text', name='value')
+          // End of form-group
+        p
+          .form-group
+            .col-sm-4
+              button.btn.btn-info(type='submit') Submit
+              a.btn.btn-danger.btn-default(href='/', role='button') Quit
+          // End of form-group
+
+
+

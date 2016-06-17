@@ -39,12 +39,12 @@ app.use(require('express-session')({
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-passport.use(new LocalStrategy(User.authenticate()));
+/*passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.deserializeUser(User.deserializeUser());*/
 
 // mongoose
-mongoose.connect('mongodb://localhost/truco-development');
+mongoose.connect('mongodb://127.0.0.1/truco-development');
 
 app.use('/', routes);
 app.use(function(req, res, next){

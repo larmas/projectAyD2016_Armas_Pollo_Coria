@@ -5,23 +5,22 @@
 var config = require('../config');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var passportLocalMongoose = require('passport-local-mongoose');
-
+//var passportLocalMongoose = require('passport-local-mongoose');
 /*
  * User Schema
  */
-
 var UserSchema = new Schema({
   username: {type: String, required: true, unique: true },
   password: String
 });
 
-UserSchema.methods.authenticate = function (password) {
+/*UserSchema.methods.authenticate = function (password) {
     return this.password === this.password;//line 63
-};
+};*/
 
 //var User = mongoose.model('User', UserSchema);
-UserSchema.plugin(passportLocalMongoose);
+//UserSchema.plugin(passportLocalMongoose);
  
 //module.exports.user = User;
-module.exports = mongoose.model('User', UserSchema);
+var User = mongoose.model('User', UserSchema);
+module.exports = User;

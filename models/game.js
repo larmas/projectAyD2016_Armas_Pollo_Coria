@@ -36,7 +36,7 @@ function Game(player1, player2){
 };
 
 /* Check if it's valid move and play in the current round */
-Game.prototype.play = function(player, action, value){
+Game.prototype.play = function(player,action, value){
 	if(this.currentRound.currentTurn !== player){
 		throw new Error("[ERROR] INVALID TURN...");}
 
