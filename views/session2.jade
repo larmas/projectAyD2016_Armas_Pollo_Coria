@@ -1,0 +1,29 @@
+extends main
+block content
+  body
+    .login
+      form(role='form', action='/session2', method='POST')
+        .jumbotron
+          span#titlefont Player 2, log in
+          p
+          span#sbfont Enter your username and password
+          p
+          p
+            .form-group
+              label.col-sm-2.control-label(for='fieldName')
+                | Userame
+              .col-sm-4
+                input#fieldName.form-control(type='text', name='username')
+            // End of form-group
+            .form-group
+              label.col-sm-2.control-label(for='fieldPass')
+                | Password
+              .col-sm-4
+                input#fieldPass.form-control(type='password', name='password')
+            // End of form-group
+            .form-group
+              .col-sm-4
+                button.btn.btn-info(type='submit') Log In!
+                a.btn.btn-danger.btn-default(href='/', role='button') Cancel
+            // End of form-group
+    // End of Login

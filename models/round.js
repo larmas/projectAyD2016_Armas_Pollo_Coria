@@ -28,19 +28,19 @@ function newTrucoFSM(){
 			                        	       'envido','real-envido',
 			                        	       'envido-e','envido-re',
 			                        	       'envido-e-re'],				to: 'f-envido'},
-			 { name: 'quiero-e',    	from: ['envido'],        			to: 'quiero-e'  },
-			 { name: 'quiero-e-e',    	from: ['envido-e'],        			to: 'quiero-e-e'  },
-			 { name: 'quiero-re',    	from: ['real-envido'],        		to: 'quiero-re'  },
-			 { name: 'quiero-e-re',    	from: ['envido-re'],        		to: 'quiero-e-re'  },
-			 { name: 'quiero-e-e-re',  	from: ['envido-e-re'],     			to: 'quiero-e-e-re'  },
-			 { name: 'quiero-fe',    	from: ['f-envido'],        			to: 'quiero-fe'  },
+			 { name: 'quiero',    		from: ['envido'],        			to: 'quiero-e'  },
+			 { name: 'quiero',    		from: ['envido-e'],        			to: 'quiero-e-e'  },
+			 { name: 'quiero',    		from: ['real-envido'],        		to: 'quiero-re'  },
+			 { name: 'quiero',    		from: ['envido-re'],        		to: 'quiero-e-re'  },
+			 { name: 'quiero',  		from: ['envido-e-re'],     			to: 'quiero-e-e-re'  },
+			 { name: 'quiero',    		from: ['f-envido'],        			to: 'quiero-fe'  },
 			 
-			 { name: 'no-quiero-e',    	from: ['envido'],        			to: 'no-quiero-e'  },
-			 { name: 'no-quiero-e-e',  	from: ['envido-e'],        			to: 'no-quiero-e-e'  },
-			 { name: 'no-quiero-re',   	from: ['real-envido'],        		to: 'no-quiero-re'  },
-			 { name: 'no-quiero-e-re', 	from: ['envido-re'],        		to: 'no-quiero-e-re'  },
-			 { name: 'no-quiero-e-e-re',from: ['envido-e-re'],     			to: 'no-quiero-e-e-re'  },
-			 { name: 'no-quiero-fe',    from: ['f-envido'],        			to: 'no-quiero-fe'  },
+			 { name: 'no-quiero',    	from: ['envido'],        			to: 'no-quiero-e'  },
+			 { name: 'no-quiero',  		from: ['envido-e'],        			to: 'no-quiero-e-e'  },
+			 { name: 'no-quiero',   	from: ['real-envido'],        		to: 'no-quiero-re'  },
+			 { name: 'no-quiero', 		from: ['envido-re'],        		to: 'no-quiero-e-re'  },
+			 { name: 'no-quiero',		from: ['envido-e-re'],     			to: 'no-quiero-e-e-re'  },
+			 { name: 'no-quiero',    	from: ['f-envido'],        			to: 'no-quiero-fe'  },
 
 			 { name: 'truco',     		from: ['init', 'first-card',
 			                      		       'played-card','quiero-e',
@@ -50,14 +50,14 @@ function newTrucoFSM(){
 			                      		       'no-quiero-e-e','no-quiero-re',
 			                      		       'no-quiero-e-re','no-quiero-e-e-re',
 			                      		       'no-quiero-fe'],      		to: 'truco'  },
-			 { name: 'quiero-t', 		from: ['truco'],              		to: 'quiero-t' },
-			 { name: 'no-quiero-t', 	from: ['truco'],              		to: 'no-quiero-t' },
+			 { name: 'quiero', 			from: ['truco'],              		to: 'quiero-t' },
+			 { name: 'no-quiero', 		from: ['truco'],              		to: 'no-quiero-t' },
 			 { name: 'retruco', 		from: ['truco','quiero-t'],    		to: 'retruco' },
-			 { name: 'no-quiero-rt', 	from: ['retruco'],              	to: 'no-quiero-rt' },
-			 { name: 'quiero-rt', 		from: ['retruco'],              	to: 'quiero-rt' },
+			 { name: 'no-quiero', 		from: ['retruco'],              	to: 'no-quiero-rt' },
+			 { name: 'quiero', 			from: ['retruco'],              	to: 'quiero-rt' },
 			 { name: 'vale4', 			from: ['retruco','quiero-rt'],      to: 'vale4' },
-			 { name: 'no-quiero-v4', 	from: ['vale4'],              		to: 'no-quiero-v4' },
-			 { name: 'quiero-v4', 		from: ['vale4'],	              	to: 'quiero-v4' },
+			 { name: 'no-quiero', 		from: ['vale4'],              		to: 'no-quiero-v4' },
+			 { name: 'quiero', 			from: ['vale4'],	              	to: 'quiero-v4' },
 			 
 		]});
 	return fsm;
@@ -105,15 +105,16 @@ function newPlayedFSM(){
 function Round(game,turn){
 	//Game
 	this.game = game;
+
 	//next turn
 	this.currentHand = turn;
 	this.currentTurn = turn;
-	
+
 	//FSMs to perform user's actions
-	
 	this.fsm = newTrucoFSM();
 	this.fsmCP = newPlayedFSM();
 	this.auxCard = undefined;
+
 	//Round's score
 	this.score = [0, 0];
 	this.status='running';
@@ -153,24 +154,23 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP,currentTurn){
 	x=30-this.game.score[0];//puntos faltan j1
 	y=30-this.game.score[1];//puntos faltan j2
 	var scoreX=[0,0];
-	
 	if(action == 'quiero-e')					{if(auxEn){scoreX=[0,2];} else{scoreX=[2,0];}}
-	else if (action=='quiero-e-e')				{if(auxEn){scoreX=[0,4];} else{scoreX=[4,0];}}
-	else if (action=='quiero-re')				{if(auxEn){scoreX=[0,3];} else{scoreX=[3,0];}}
-	else if (action=='quiero-e-re')				{if(auxEn){scoreX=[0,5];} else{scoreX=[5,0];}}
-	else if (action=='quiero-e-e-re')			{if(auxEn){scoreX=[0,7];} else{scoreX=[7,0];}}
-	else if (action=='quiero-fe')				{if(auxEn){scoreX=[0,x];} else{scoreX=[y,0];}}	
+	else if (fsm.current=='quiero-e-e')				{if(auxEn){scoreX=[0,4];} else{scoreX=[4,0];}}
+	else if (fsm.current=='quiero-re')				{if(auxEn){scoreX=[0,3];} else{scoreX=[3,0];}}
+	else if (fsm.current=='quiero-e-re')				{if(auxEn){scoreX=[0,5];} else{scoreX=[5,0];}}
+	else if (fsm.current=='quiero-e-e-re')			{if(auxEn){scoreX=[0,7];} else{scoreX=[7,0];}}
+	else if (fsm.current=='quiero-fe')				{if(auxEn){scoreX=[0,x];} else{scoreX=[y,0];}}	
 	
-	else if (action=='no-quiero-e')				{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
-	else if (action=='no-quiero-e-e')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
-	else if (action=='no-quiero-re')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
-	else if (action=='no-quiero-e-re')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
-	else if (action=='no-quiero-e-e-re')		{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
-	else if (action=='no-quiero-fe')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+	else if (fsm.current=='no-quiero-e')				{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+	else if (fsm.current=='no-quiero-e-e')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+	else if (fsm.current=='no-quiero-re')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+	else if (fsm.current=='no-quiero-e-re')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+	else if (fsm.current=='no-quiero-e-e-re')		{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
+	else if (fsm.current=='no-quiero-fe')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
 	
-	else if (action=='no-quiero-t')				{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
-	else if (action=='no-quiero-rt')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
-	else if (action=='no-quiero-v4')			{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
+	else if (fsm.current=='no-quiero-t')				{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+	else if (fsm.current=='no-quiero-rt')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+	else if (fsm.current=='no-quiero-v4')			{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
 	
 	else if (action=='play-card'){
 		if(fsmCP.current=='p1-wins'){

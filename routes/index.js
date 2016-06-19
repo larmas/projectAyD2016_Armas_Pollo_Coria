@@ -1,16 +1,16 @@
 var express = require('express');
-var passport = require('passport');
 var User = require('../models/user');
 var Game = require('../models/game').game;
 var Player = require('../models/player').player;
 var router = express.Router();
-var session1= undefined;
 var session2= undefined;
 var Game = require("../models/game").game;
 var myGame=undefined;
 /* GET home page. */
+
+
 router.get('/', function (req, res) {
-	res.render('home', {user:req.user});
+	res.render('home', {user:req.session.user});
 });
 
 router.get('/register', function(req, res) {
@@ -22,10 +22,14 @@ router.post('/register', function(req, res) {
 	console.log('Pass : ' + req.body.password);
 	user = new User({username: req.body.username , password: req.body.password});
 	user.save(function (err){
-		if (err) throw err;
-		console.log("new account created");
+		if (err) {
+			res.redirect('/register');
+		}else{
+			res.redirect('/');
+			console.log("new account created");
+		}
 	});
-	res.redirect('/');
+	
 });
 
 router.get('/players',function(req,res){
@@ -36,11 +40,11 @@ router.get('/players',function(req,res){
 });
 
 router.get('/login', function(req, res) {
-	if (session1==undefined){
+	if (!req.session.user){
 		res.render('login', { });
 	}
 	else{
-		res.redirect('/');
+		res.redirect('/menu');
 	}
 });
 
@@ -48,35 +52,74 @@ router.get('/login', function(req, res) {
 router.post('/login', function(req, res) {
 	console.log('Name : ' + req.body.username);
 	console.log('Pass : ' + req.body.password);
-	//if(!session){
-		User.find({username:req.body.username, password:req.body.password}, function(err){
-			if(err){ throw err; }
-			else{
-				session1=new User({username:req.body.username, password:req.body.password});
+	if(!req.session.user){
+		User.findOne({username:req.body.username, password:req.body.password}, function(err, user) {
+			if(err){
+				throw err;
+			}else{
+				console.log('User found in data base');
+				req.session.user = new User({username:req.body.username, password:req.body.password});
+				res.redirect('/menu');
 			}
 		});
-	//}
-	res.redirect('/menu');
+	}else{
+		res.redirect('/wrong');
+	}
+	
 });
 
-router.get('/menu', function(req,res){
-	if(session1!=undefined){
-		res.render('menu', {user:session1});
-	}else{
+
+router.get('/session2', function(req, res) {
+	if (req.session.user){
+		res.render('session2', { });
+	}
+	else{
 		res.redirect('/');
 	}
 });
 
+
+router.post('/session2', function(req, res) {
+	console.log('Name : ' + req.body.username);
+	console.log('Pass : ' + req.body.password);
+	if(req.session.user){
+		User.findOne({username:req.body.username, password:req.body.password}, function(err, user) {
+			if(err){
+				throw err;
+			}else{
+				console.log('User found in data base');
+				session2 = new User({username:req.body.username, password:req.body.password});
+				res.redirect('/newGame');
+			}
+		});
+	}else{
+		res.redirect('/wrong');
+	}
+	
+});
+
+router.get('/menu', function(req,res){
+	myGame=undefined;
+	if(!req.session.user){
+		res.redirect('/');
+	}else{
+		res.render('menu', {user:req.session.user});
+	}
+});
+
 router.get('/logout', function(req, res) {
-    req.logout();
-    session1=undefined;
+    req.session.destroy(function(err){
+    	if (err){
+    		throw(err);
+    	}
+    });
     res.redirect('/');
 });
 
 router.get('/newGame', function(req, res) {
-	if(session1!=undefined){
-		var player1= new Player(session1.username);
-	    var	player2= new Player("martin");
+	if(req.session.user){
+		var player1= new Player(req.session.user.username);
+	    var	player2= new Player(session2.username);
 		myGame= new Game(player1, player2);
 		console.log("about to play: "+myGame.player1.name+" vs. "+myGame.player2.name);
 		console.log("score: "+myGame.score[0]+" vs "+ myGame.score[1]);
@@ -89,7 +132,7 @@ router.get('/newGame', function(req, res) {
 });
 
 router.get('/round',function(req, res){
-	if(session1!=undefined && myGame!=undefined){
+	if(req.session.user && myGame!=undefined){
 		myGame.newRound();
 		myGame.currentRound.deal();
 		res.render('newGame',{myGame: myGame});
@@ -101,21 +144,24 @@ router.get('/round',function(req, res){
 
 
 router.post('/round', function(req,res){
-	myGame.play(myGame.currentRound.currentTurn,req.body.action,req.body.value);
-	if(myGame.score[0]>=30){
-		res.send(myGame.player1.name+" wins");
-		myGame=undefined;
+	if(!req.session.user){
 		res.redirect('/menu');
-	}else if(myGame.score[1]>=30){
-		res.send(myGame.player2.name+" wins");
-		myGame=undefined;
-		res.redirect('/menu');
-	} else {
-		if (myGame.currentRound.status!='running'){
-			myGame.newRound();
-			myGame.currentRound.deal();
+	}
+	else{
+		myGame.play(myGame.currentRound.currentTurn,req.body.action,req.body.value);
+		if(myGame.score[0]>=30){
+			myGame=undefined;
+			res.render('wins', {user: req.session.user.username});
+		}else if(myGame.score[1]>=30){
+			myGame=undefined;
+			res.render('wins', {user: session2.username});
+		} else {
+			if (myGame.currentRound.status!='running'){
+				myGame.newRound();
+				myGame.currentRound.deal();
+			}
+			res.render('newGame',{myGame: myGame});
 		}
-		res.render('newGame',{myGame: myGame});
 	}
 });
 

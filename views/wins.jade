@@ -1,0 +1,10 @@
+extends main
+block content
+  body
+    .page-header
+      .jumbotron
+        p
+          span#titlefont #{user} WINS! Well done :)
+        p
+          a.btn.btn-info.btn-default(href='/newGame', role='button') Play Again!
+          a.btn.btn-warning.btn-default(href='/menu', role='button') Return to Menu
