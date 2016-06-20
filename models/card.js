@@ -34,7 +34,8 @@ var weight = {
 function Card(number, suit){
   this.number = number;
   this.suit = suit;
-  this.weight = weight[suit][number];
+  this.dir="/img/cards/"+this.number+"-"+this.suit+".png";
+  this.weight = weight[suit][number-1];
 };
 
 /*

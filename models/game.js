@@ -10,7 +10,6 @@ var _ = require('lodash');
 var playerModel = require("./player");
 var roundModel = require("./round");
 
-
 var Player = playerModel.player;
 var Round  = roundModel.round;
 
@@ -32,8 +31,17 @@ function Game(player1, player2){
 
   	//Game's score
   	this.score = [0, 0];
+
+  	this.action=undefined;
+  	this.value=undefined;
   	
 };
+
+
+function aux(action,value){
+	this.action=action;
+	this.value=value;
+}
 
 /* Check if it's valid move and play in the current round */
 Game.prototype.play = function(player,action, value){

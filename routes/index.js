@@ -25,8 +25,8 @@ router.post('/register', function(req, res) {
 		if (err) {
 			res.redirect('/register');
 		}else{
-			res.redirect('/');
 			console.log("new account created");
+			res.redirect('/');
 		}
 	});
 	
@@ -44,7 +44,7 @@ router.get('/login', function(req, res) {
 		res.render('login', { });
 	}
 	else{
-		res.redirect('/menu');
+		res.redirect('/');
 	}
 });
 
@@ -59,7 +59,7 @@ router.post('/login', function(req, res) {
 			}else{
 				console.log('User found in data base');
 				req.session.user = new User({username:req.body.username, password:req.body.password});
-				res.redirect('/menu');
+				res.redirect('/');
 			}
 		});
 	}else{
@@ -98,14 +98,6 @@ router.post('/session2', function(req, res) {
 	
 });
 
-router.get('/menu', function(req,res){
-	myGame=undefined;
-	if(!req.session.user){
-		res.redirect('/');
-	}else{
-		res.render('menu', {user:req.session.user});
-	}
-});
 
 router.get('/logout', function(req, res) {
     req.session.destroy(function(err){
@@ -145,10 +137,11 @@ router.get('/round',function(req, res){
 
 router.post('/round', function(req,res){
 	if(!req.session.user){
-		res.redirect('/menu');
-	}
-	else{
-		myGame.play(myGame.currentRound.currentTurn,req.body.action,req.body.value);
+		res.redirect('/');
+	}else{
+		//console.log("entra a round");
+		console.log("action: "+req.body.what+"value: "+req.body.how);
+		myGame.play(myGame.currentRound.currentTurn,req.body.what,req.body.how);
 		if(myGame.score[0]>=30){
 			myGame=undefined;
 			res.render('wins', {user: req.session.user.username});

@@ -19,15 +19,17 @@ function newTrucoFSM(){
 		events: 
 			[{ name: 'play-card', 		from: 'init',     					to: 'first-card' },
 			 { name: 'play-card', 		from: ['first-card','played-card'],	to: 'played-card' },
-			 { name: 'envido',    		from: ['init', 'first-card'],		to: 'envido' },
+			 { name: 'envido',    		from: ['init', 'first-card',
+			 									'truco'],					to: 'envido' },
 			 { name: 'envido',    		from: ['envido'],					to: 'envido-e' },
-			 { name: 'real-envido',		from: ['init', 'first-card'],		to: 'real-envido' },
+			 { name: 'real-envido',		from: ['init', 'first-card',
+			 									'truco'],					to: 'real-envido' },
 			 { name: 'real-envido',    	from: ['envido'],					to: 'envido-re' },
 			 { name: 'real-envido',    	from: ['envido-e'],					to: 'envido-e-re' },
 			 { name: 'f-envido',    	from: ['init', 'first-card',
 			                        	       'envido','real-envido',
 			                        	       'envido-e','envido-re',
-			                        	       'envido-e-re'],				to: 'f-envido'},
+			                        	       'envido-e-re','truco'],		to: 'f-envido'},
 			 { name: 'quiero',    		from: ['envido'],        			to: 'quiero-e'  },
 			 { name: 'quiero',    		from: ['envido-e'],        			to: 'quiero-e-e'  },
 			 { name: 'quiero',    		from: ['real-envido'],        		to: 'quiero-re'  },
@@ -106,6 +108,8 @@ function Round(game,turn){
 	//Game
 	this.game = game;
 
+	this.game.player1.allowed=true;
+    this.game.player2.allowed=true;
 	//next turn
 	this.currentHand = turn;
 	this.currentTurn = turn;
@@ -119,6 +123,9 @@ function Round(game,turn){
 	this.score = [0, 0];
 	this.status='running';
 
+	this.noQuieroF=1;
+	this.board1=[];
+	this.board2=[];
 };
 
 /* Generates a new deck shuffled and gives to players the correspondent cards */
@@ -133,7 +140,7 @@ Round.prototype.changeTurn = function(game){
 		return this.currentTurn;
 	}
 	else{
-		return this.currentTurn = this.switchPlayer(this.currentTurn,game);
+		return this.currentTurn = this.switchPlayer(this.currentTurn,this.game);
 	}
 };
 
@@ -147,31 +154,32 @@ Round.prototype.switchPlayer=function (player,game) {
 	}
 };
 
-Round.prototype.calculateScore = function(action,fsm,fsmCP,currentTurn){
-	aux  = (currentTurn==this.game.player1);
-	aux2 = (this.game.currentHand==this.game.player1);
+Round.prototype.calculateScore = function(action,fsm,fsmCP){
+	aux  = (this.currentTurn==this.game.player1);
+	aux2 = (this.currentHand==this.game.player1);
 	auxEn =	this.game.player1.envidoPoints<this.game.player2.envidoPoints;
 	x=30-this.game.score[0];//puntos faltan j1
 	y=30-this.game.score[1];//puntos faltan j2
 	var scoreX=[0,0];
-	if(action == 'quiero-e')					{if(auxEn){scoreX=[0,2];} else{scoreX=[2,0];}}
-	else if (fsm.current=='quiero-e-e')				{if(auxEn){scoreX=[0,4];} else{scoreX=[4,0];}}
-	else if (fsm.current=='quiero-re')				{if(auxEn){scoreX=[0,3];} else{scoreX=[3,0];}}
-	else if (fsm.current=='quiero-e-re')				{if(auxEn){scoreX=[0,5];} else{scoreX=[5,0];}}
-	else if (fsm.current=='quiero-e-e-re')			{if(auxEn){scoreX=[0,7];} else{scoreX=[7,0];}}
-	else if (fsm.current=='quiero-fe')				{if(auxEn){scoreX=[0,x];} else{scoreX=[y,0];}}	
-	
-	else if (fsm.current=='no-quiero-e')				{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
-	else if (fsm.current=='no-quiero-e-e')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
-	else if (fsm.current=='no-quiero-re')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
-	else if (fsm.current=='no-quiero-e-re')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
-	else if (fsm.current=='no-quiero-e-e-re')		{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
-	else if (fsm.current=='no-quiero-fe')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
-	
-	else if (fsm.current=='no-quiero-t')				{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
-	else if (fsm.current=='no-quiero-rt')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
-	else if (fsm.current=='no-quiero-v4')			{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
-	
+	if(action=='quiero'){
+		if(fsm.current == 'quiero-e')					{if(auxEn){scoreX=[0,2];} else{scoreX=[2,0];}}
+		else if (fsm.current=='quiero-e-e')				{if(auxEn){scoreX=[0,4];} else{scoreX=[4,0];}}
+		else if (fsm.current=='quiero-re')				{if(auxEn){scoreX=[0,3];} else{scoreX=[3,0];}}
+		else if (fsm.current=='quiero-e-re')			{if(auxEn){scoreX=[0,5];} else{scoreX=[5,0];}}
+		else if (fsm.current=='quiero-e-e-re')			{if(auxEn){scoreX=[0,7];} else{scoreX=[7,0];}}
+		else if (fsm.current=='quiero-fe')				{if(auxEn){scoreX=[0,x];} else{scoreX=[y,0];}}	
+	}
+	else if(action=='no-quiero'){
+		if (fsm.current=='no-quiero-e')					{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+		else if (fsm.current=='no-quiero-e-e')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+		else if (fsm.current=='no-quiero-re')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+		else if (fsm.current=='no-quiero-e-re')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+		else if (fsm.current=='no-quiero-e-e-re')		{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
+		else if (fsm.current=='no-quiero-fe')			{if(aux){scoreX=[0,this.noQuieroF];} else{scoreX=[this.noQuieroF,0];}}
+		else if (fsm.current=='no-quiero-t')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
+		else if (fsm.current=='no-quiero-rt')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
+		else if (fsm.current=='no-quiero-v4')			{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
+	}
 	else if (action=='play-card'){
 		if(fsmCP.current=='p1-wins'){
 			if(fsm.current=='quiero-t')			{if(aux2){scoreX=[2,0];} else{scoreX=[0,2];}}
@@ -197,28 +205,46 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP,currentTurn){
 
 Round.prototype.makePlay = function (action,i,fsm,fsmCP,currentTurn){
 	if(action=='play-card'){
+		if (currentTurn==this.game.player1){
+			this.board1.push(this.game.player1.cards[i]);
+		}else{
+			this.board2.push(this.game.player2.cards[i]);
+		}
+
 		if(fsm.current=='init'||fsm.current=='first-card'){
 			fsm[action]();
 		}
+
 		if (this.auxCard == undefined){
 			fsmCP['play-card']();
 			this.auxCard = currentTurn.cards[i];
-		}
-		else if(currentTurn.cards[i].confront(this.auxCard)==1){//last played card defeats aux
+		} else if(currentTurn.cards[i].confront(this.auxCard)==1){//last played card defeats aux
 			fsmCP['play-card-w']();
 			this.auxCard = undefined;
-		}
-		else if(currentTurn.cards[i].confront(this.auxCard)==0){//last played card same weight as aux
+		} else if(currentTurn.cards[i].confront(this.auxCard)==0){//last played card same weight as aux
 			fsmCP['play-card-s']();
 			this.auxCard = undefined;
-		}
-		else if(currentTurn.cards[i].confront(this.auxCard)==-1){//last played card defeated by aux
+		} else if(currentTurn.cards[i].confront(this.auxCard)==-1){//last played card defeated by aux
 			fsmCP['play-card-l']();
 			this.auxCard = undefined;
 		}
 		delete currentTurn.cards[i];
 	}else{
 		fsm[action]();
+		if(action=='no-quiero'){
+			currentTurn.allowed=true;
+			this.switchPlayer(currentTurn,this.game).allowed=true;
+		}else if (action=='quiero'){
+			if (fsm.current!='quiero-t'&& (fsm.current!='quiero-rt' && fsm.current!='quiero-v4')){
+				currentTurn.allowed=true;
+				this.switchPlayer(currentTurn,this.game).allowed=true;
+			}
+		}else{
+			currentTurn.allowed=false;
+			this.switchPlayer(currentTurn,this.game).allowed=true;
+		}
+		
+		
 	}
 };
 
