@@ -53,17 +53,19 @@ router.post('/login', function(req, res) {
 	console.log('Name : ' + req.body.username);
 	console.log('Pass : ' + req.body.password);
 	if(!req.session.user){
-		User.findOne({username:req.body.username, password:req.body.password}, function(err, user) {
+		User.findOne({username:req.body.username, password:req.body.password}, function(err, userf) {
 			if(err){
 				throw err;
-			}else{
+			}else if (userf){
 				console.log('User found in data base');
-				req.session.user = new User({username:req.body.username, password:req.body.password});
+				req.session.user = userf;
 				res.redirect('/');
+			}else{
+				res.render('wrong');
 			}
 		});
 	}else{
-		res.redirect('/wrong');
+		res.redirect('/');
 	}
 	
 });
@@ -83,19 +85,20 @@ router.post('/session2', function(req, res) {
 	console.log('Name : ' + req.body.username);
 	console.log('Pass : ' + req.body.password);
 	if(req.session.user){
-		User.findOne({username:req.body.username, password:req.body.password}, function(err, user) {
+		User.findOne({username:req.body.username, password:req.body.password}, function(err, userf) {
 			if(err){
 				throw err;
-			}else{
+			}else if (userf){
 				console.log('User found in data base');
-				session2 = new User({username:req.body.username, password:req.body.password});
+				session2 = userf;
 				res.redirect('/newGame');
+			}else{
+				res.render('wrong');
 			}
 		});
 	}else{
-		res.redirect('/wrong');
+		res.redirect('/');
 	}
-	
 });
 
 
@@ -109,6 +112,7 @@ router.get('/logout', function(req, res) {
 });
 
 router.get('/newGame', function(req, res) {
+	console.log('entra a new game');
 	if(req.session.user){
 		var player1= new Player(req.session.user.username);
 	    var	player2= new Player(session2.username);

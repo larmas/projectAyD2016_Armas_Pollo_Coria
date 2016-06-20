@@ -135,8 +135,8 @@ Round.prototype.deal = function(){
   	this.game.player2.setCards(_.pullAt(deck, 1, 3, 5));
 };
 
-Round.prototype.changeTurn = function(game){
-	if (this.fsmCP.current=='p2-won-1st' || this.fsmCP.current=='1vs1-1' || this.fsmCP.current=='1vs1-2'){
+Round.prototype.changeTurn = function(game,action){
+	if (action='play-card' &&(this.fsmCP.current=='p2-won-1st' || this.fsmCP.current=='1vs1-1' || this.fsmCP.current=='1vs1-2')){
 		return this.currentTurn;
 	}
 	else{
@@ -242,15 +242,13 @@ Round.prototype.makePlay = function (action,i,fsm,fsmCP,currentTurn){
 		}else{
 			currentTurn.allowed=false;
 			this.switchPlayer(currentTurn,this.game).allowed=true;
-		}
-		
-		
+		}		
 	}
 };
 
 Round.prototype.checkStatus= function(fsmCP){
-	if ((fsmCP.current=='p1-wins') || (fsmCP.current=='p2-wins') || (fsmCP.current=='no-quiero-t') ||
-		(fsmCP.current=='no-quiero-rt') || (fsmCP.current=='no-quiero-v4') ){
+	if ((fsmCP.current=='p1-wins') || (fsmCP.current=='p2-wins') || (fsm.current=='no-quiero-t') ||
+		(fsm.current=='no-quiero-rt') || (fsm.current=='no-quiero-v4') ){
 		this.status='finished';
 	}
 };
@@ -267,7 +265,7 @@ Round.prototype.play = function(action, value,player) {
 	this.checkStatus(this.fsmCP);
 	
 	// Change player's turn
-	return this.changeTurn(this.game);
+	return this.changeTurn(this.game, action);
 	
 	
 };
