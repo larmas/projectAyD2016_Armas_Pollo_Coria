@@ -246,7 +246,7 @@ Round.prototype.makePlay = function (action,i,fsm,fsmCP,currentTurn){
 	}
 };
 
-Round.prototype.checkStatus= function(fsmCP){
+Round.prototype.checkStatus= function(fsmCP,fsm){
 	if ((fsmCP.current=='p1-wins') || (fsmCP.current=='p2-wins') || (fsm.current=='no-quiero-t') ||
 		(fsm.current=='no-quiero-rt') || (fsm.current=='no-quiero-v4') ){
 		this.status='finished';
@@ -262,7 +262,7 @@ Round.prototype.play = function(action, value,player) {
 	this.calculateScore(action, this.fsm, this.fsmCP);
 
 	//check status
-	this.checkStatus(this.fsmCP);
+	this.checkStatus(this.fsmCP,this.fsm);
 	
 	// Change player's turn
 	return this.changeTurn(this.game, action);
