@@ -14,7 +14,7 @@ var cardModel = require('./card');
 var Card = cardModel.card;
 
 function newTrucoFSM(){
-	var fsm = StateMachine.create({
+	var fsm = StateMachine.create({			//defines state in terms of chants made
 		initial: 'init',
 		events: 
 			[{ name: 'play-card', 		from: 'init',     					to: 'first-card' },
@@ -65,7 +65,7 @@ function newTrucoFSM(){
 	return fsm;
 };
 
-function newPlayedFSM(){
+function newPlayedFSM(){				//defines state in terms of playing cards
 	var fsm = StateMachine.create({
 	initial: 'init',
 	events: 
@@ -158,10 +158,10 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP){
 	aux  = (this.currentTurn==this.game.player1);
 	aux2 = (this.currentHand==this.game.player1);
 	auxEn =	this.game.player1.envidoPoints<this.game.player2.envidoPoints;
-	x=30-this.game.score[0];//puntos faltan j1
-	y=30-this.game.score[1];//puntos faltan j2
+	x=30-this.game.score[0];		//lacking points to j1 wining
+	y=30-this.game.score[1];		//lacking points to j2 wining
 	var scoreX=[0,0];
-	if(action=='quiero'){
+	if(action=='quiero'){		//calculates score of a quiero
 		if(fsm.current == 'quiero-e')					{if(auxEn){scoreX=[0,2];} else{scoreX=[2,0];}}
 		else if (fsm.current=='quiero-e-e')				{if(auxEn){scoreX=[0,4];} else{scoreX=[4,0];}}
 		else if (fsm.current=='quiero-re')				{if(auxEn){scoreX=[0,3];} else{scoreX=[3,0];}}
@@ -169,7 +169,7 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP){
 		else if (fsm.current=='quiero-e-e-re')			{if(auxEn){scoreX=[0,7];} else{scoreX=[7,0];}}
 		else if (fsm.current=='quiero-fe')				{if(auxEn){scoreX=[0,x];} else{scoreX=[y,0];}}	
 	}
-	else if(action=='no-quiero'){
+	else if(action=='no-quiero'){ //calculates score of a no quiero
 		if (fsm.current=='no-quiero-e')					{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
 		else if (fsm.current=='no-quiero-e-e')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
 		else if (fsm.current=='no-quiero-re')			{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
@@ -180,7 +180,7 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP){
 		else if (fsm.current=='no-quiero-rt')			{if(aux){scoreX=[0,2];} else{scoreX=[2,0];}}
 		else if (fsm.current=='no-quiero-v4')			{if(aux){scoreX=[0,3];} else{scoreX=[3,0];}}
 	}
-	else if (action=='play-card'){
+	else if (action=='play-card'){//calculates score of an ending round by a card played
 		if(fsmCP.current=='p1-wins'){
 			if(fsm.current=='quiero-t')			{if(aux2){scoreX=[2,0];} else{scoreX=[0,2];}}
 			else if(fsm.current=='quiero-rt')	{if(aux2){scoreX=[3,0];} else{scoreX=[0,3];}}
@@ -194,7 +194,7 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP){
 		}
 	}
 	
-	this.score[0] += scoreX[0];
+	this.score[0] += scoreX[0];		//adds score to the game itself
 	this.score[1] += scoreX[1];
 	
 	this.game.score[0] += scoreX[0];
@@ -230,8 +230,8 @@ Round.prototype.makePlay = function (action,i,fsm,fsmCP,currentTurn){
 		}
 		delete currentTurn.cards[i];
 	}else{
-		fsm[action]();
-		if(action=='no-quiero'){
+		fsm[action]();								//applies action to fsm
+		if(action=='no-quiero'){					//checks who's allowed to chant in the next turn
 			currentTurn.allowed=true;
 			this.switchPlayer(currentTurn,this.game).allowed=true;
 		}else if (action=='quiero'){

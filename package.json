@@ -4,7 +4,8 @@
   "description": "Quiero re truco",
   "main": "truco.js",
   "scripts": {
-    "test": "mocha"
+     "test": "mocha",
+     "start": "SET NODE_ENV= development truco.js"
   },
   "author": "me",
   "license": "MIT",
