@@ -48,7 +48,7 @@ Game.prototype.play = function(player,action, value){
 	if(this.currentRound.currentTurn !== player){
 		throw new Error("[ERROR] INVALID TURN...");}
 
-	if (this.currentRound.fsm.current=='init' || this.currentRound.fsm.current=='first-card' || action!='play-card'){
+	if (action!='play-card'){
 		if(this.currentRound.fsm.cannot(action)){
 			throw new Error("[ERROR] INVALID MOVE...");
 		}

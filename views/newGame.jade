@@ -21,18 +21,21 @@ block content
               ul.nav.navbar-nav
                 li
                   form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsm.can('envido'))
-                      button.btn.btn-success(type='submit') Envido
-                      input(name="what", type='hidden', value='envido')
-                      input(name="how",type='hidden', value=0)
+                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                      if(myGame.currentRound.fsm.can('envido'))
+                        button.btn.btn-success(type='submit') Envido
+                        input(name="what", type='hidden', value='envido')
+                        input(name="how",type='hidden', value=0)
                 li
                   form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsm.can('real-envido'))
+                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                      if(myGame.currentRound.fsm.can('real-envido'))
                         button.btn.btn-success(type='submit') Real Envido
                         input(name="what", type='hidden', value='real-envido')
                         input(name="how",type='hidden', value=0)
                 li
-                    form(role='form', action='/round', method='POST')
+                  form(role='form', action='/round', method='POST')
+                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
                       if(myGame.currentRound.fsm.can('f-envido'))
                         button.btn.btn-success(type='submit') Falta Envido
                         input(name="what", type='hidden', value='f-envido')
@@ -50,23 +53,23 @@ block content
                         input(name="what", type='hidden', value='retruco')
                         input(name="how",type='hidden', value=0)
                 li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('vale4'))
-                        button.btn.btn-warning(type='submit') Vale 4
-                        input(name="what", type='hidden', value='vale4')
-                        input(name="how",type='hidden', value=0)  
+                  form(role='form', action='/round', method='POST')
+                    if(myGame.currentRound.fsm.can('vale4'))
+                      button.btn.btn-warning(type='submit') Vale 4
+                      input(name="what", type='hidden', value='vale4')
+                      input(name="how",type='hidden', value=0)  
                 li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('quiero'))
-                        button.btn.btn-info(type='submit') Quiero
-                        input(name="what", type='hidden', value='quiero')
-                        input(name="how",type='hidden', value=0)
+                  form(role='form', action='/round', method='POST')
+                    if(myGame.currentRound.fsm.can('quiero'))
+                      button.btn.btn-info(type='submit') Quiero
+                      input(name="what", type='hidden', value='quiero')
+                      input(name="how",type='hidden', value=0)
                 li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('no-quiero'))
-                        button.btn.btn-danger(type='submit') No Quiero
-                        input(name="what", type='hidden', value='no-quiero')
-                        input(name="how",type='hidden', value=0)
+                  form(role='form', action='/round', method='POST')
+                    if(myGame.currentRound.fsm.can('no-quiero'))
+                      button.btn.btn-danger(type='submit') No Quiero
+                      input(name="what", type='hidden', value='no-quiero')
+                      input(name="how",type='hidden', value=0)
 
           p
             br  
@@ -181,18 +184,21 @@ block content
                 ul.nav.navbar-nav
                   li
                     form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('envido'))
-                        button.btn.btn-success(type='submit') Envido
-                        input(name="what", type='hidden', value='envido')
-                        input(name="how",type='hidden', value=0)
+                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                        if(myGame.currentRound.fsm.can('envido'))
+                          button.btn.btn-success(type='submit') Envido
+                          input(name="what", type='hidden', value='envido')
+                          input(name="how",type='hidden', value=0)
                   li
                     form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('real-envido'))
+                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                        if(myGame.currentRound.fsm.can('real-envido'))
                           button.btn.btn-success(type='submit') Real Envido
                           input(name="what", type='hidden', value='real-envido')
                           input(name="how",type='hidden', value=0)
                   li
-                      form(role='form', action='/round', method='POST')
+                    form(role='form', action='/round', method='POST')
+                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
                         if(myGame.currentRound.fsm.can('f-envido'))
                           button.btn.btn-success(type='submit') Falta Envido
                           input(name="what", type='hidden', value='f-envido')
@@ -210,23 +216,23 @@ block content
                           input(name="what", type='hidden', value='retruco')
                           input(name="how",type='hidden', value=0)
                   li
-                      form(role='form', action='/round', method='POST')
-                        if(myGame.currentRound.fsm.can('vale4'))
-                          button.btn.btn-warning(type='submit') Vale 4
-                          input(name="what", type='hidden', value='vale4')
-                          input(name="how",type='hidden', value=0)  
+                    form(role='form', action='/round', method='POST')
+                      if(myGame.currentRound.fsm.can('vale4'))
+                        button.btn.btn-warning(type='submit') Vale 4
+                        input(name="what", type='hidden', value='vale4')
+                        input(name="how",type='hidden', value=0)  
                   li
-                      form(role='form', action='/round', method='POST')
-                        if(myGame.currentRound.fsm.can('quiero'))
-                          button.btn.btn-info(type='submit') Quiero
-                          input(name="what", type='hidden', value='quiero')
-                          input(name="how",type='hidden', value=0)
+                    form(role='form', action='/round', method='POST')
+                      if(myGame.currentRound.fsm.can('quiero'))
+                        button.btn.btn-info(type='submit') Quiero
+                        input(name="what", type='hidden', value='quiero')
+                        input(name="how",type='hidden', value=0)
                   li
-                      form(role='form', action='/round', method='POST')
-                        if(myGame.currentRound.fsm.can('no-quiero'))
-                          button.btn.btn-danger(type='submit') No Quiero
-                          input(name="what", type='hidden', value='no-quiero')
-                          input(name="how",type='hidden', value=0)
+                    form(role='form', action='/round', method='POST')
+                      if(myGame.currentRound.fsm.can('no-quiero'))
+                        button.btn.btn-danger(type='submit') No Quiero
+                        input(name="what", type='hidden', value='no-quiero')
+                        input(name="how",type='hidden', value=0)
             
         if(myGame.currentRound.currentTurn!=myGame.player2)
           center

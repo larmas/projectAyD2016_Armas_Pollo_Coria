@@ -17,19 +17,16 @@ function newTrucoFSM(){
 	var fsm = StateMachine.create({			//defines state in terms of chants made
 		initial: 'init',
 		events: 
-			[{ name: 'play-card', 		from: 'init',     					to: 'first-card' },
-			 { name: 'play-card', 		from: ['first-card','played-card'],	to: 'played-card' },
-			 { name: 'envido',    		from: ['init', 'first-card',
-			 									'truco'],					to: 'envido' },
+			[
+			 { name: 'envido',    		from: ['init','trucoNE'],				to: 'envido' },
 			 { name: 'envido',    		from: ['envido'],					to: 'envido-e' },
-			 { name: 'real-envido',		from: ['init', 'first-card',
-			 									'truco'],					to: 'real-envido' },
+			 { name: 'real-envido',		from: ['init','trucoNE'],				to: 'real-envido' },
 			 { name: 'real-envido',    	from: ['envido'],					to: 'envido-re' },
 			 { name: 'real-envido',    	from: ['envido-e'],					to: 'envido-e-re' },
-			 { name: 'f-envido',    	from: ['init', 'first-card',
-			                        	       'envido','real-envido',
+			 { name: 'f-envido',    	from: ['init','envido',
+			 									'real-envido',
 			                        	       'envido-e','envido-re',
-			                        	       'envido-e-re','truco'],		to: 'f-envido'},
+			                        	       'envido-e-re','trucoNE'],		to: 'f-envido'},
 			 { name: 'quiero',    		from: ['envido'],        			to: 'quiero-e'  },
 			 { name: 'quiero',    		from: ['envido-e'],        			to: 'quiero-e-e'  },
 			 { name: 'quiero',    		from: ['real-envido'],        		to: 'quiero-re'  },
@@ -43,18 +40,18 @@ function newTrucoFSM(){
 			 { name: 'no-quiero', 		from: ['envido-re'],        		to: 'no-quiero-e-re'  },
 			 { name: 'no-quiero',		from: ['envido-e-re'],     			to: 'no-quiero-e-e-re'  },
 			 { name: 'no-quiero',    	from: ['f-envido'],        			to: 'no-quiero-fe'  },
-
-			 { name: 'truco',     		from: ['init', 'first-card',
-			                      		       'played-card','quiero-e',
+			 { name: 'truco', 			from: 'init',     					to: 'trucoNE' },
+			 { name: 'truco',     		from: ['quiero-e',
 			                      		       'no-quiero-e','quiero-e-e',
 			                      		       'quiero-re','quiero-e-re',
 			                      		       'quiero-e-e-re','quiero-fe',
 			                      		       'no-quiero-e-e','no-quiero-re',
 			                      		       'no-quiero-e-re','no-quiero-e-e-re',
 			                      		       'no-quiero-fe'],      		to: 'truco'  },
-			 { name: 'quiero', 			from: ['truco'],              		to: 'quiero-t' },
+			 { name: 'quiero', 			from: ['trucoNE','truco'],          to: 'quiero-t' },
 			 { name: 'no-quiero', 		from: ['truco'],              		to: 'no-quiero-t' },
-			 { name: 'retruco', 		from: ['truco','quiero-t'],    		to: 'retruco' },
+			 { name: 'retruco', 		from: ['truco','quiero-t',
+			 									'trucoNE'], 				to: 'retruco' },
 			 { name: 'no-quiero', 		from: ['retruco'],              	to: 'no-quiero-rt' },
 			 { name: 'quiero', 			from: ['retruco'],              	to: 'quiero-rt' },
 			 { name: 'vale4', 			from: ['retruco','quiero-rt'],      to: 'vale4' },
@@ -136,7 +133,7 @@ Round.prototype.deal = function(){
 };
 
 Round.prototype.changeTurn = function(game,action){
-	if (action='play-card' &&(this.fsmCP.current=='p2-won-1st' || this.fsmCP.current=='1vs1-1' || this.fsmCP.current=='1vs1-2')){
+	if (action=='play-card' &&(this.fsmCP.current=='p2-won-1st' || this.fsmCP.current=='1vs1-1' || this.fsmCP.current=='1vs1-2')){
 		return this.currentTurn;
 	}
 	else{
@@ -210,11 +207,6 @@ Round.prototype.makePlay = function (action,i,fsm,fsmCP,currentTurn){
 		}else{
 			this.board2.push(this.game.player2.cards[i]);
 		}
-
-		if(fsm.current=='init'||fsm.current=='first-card'){
-			fsm[action]();
-		}
-
 		if (this.auxCard == undefined){
 			fsmCP['play-card']();
 			this.auxCard = currentTurn.cards[i];

@@ -81,23 +81,24 @@ router.get('/session2', function(req, res) {
 
 
 router.post('/session2', function(req, res) {
-	/*console.log('Name : ' + req.body.username);
+	console.log('Name : ' + req.body.username);
 	console.log('Pass : ' + req.body.password);
 	if(req.session.user){				//if there is a session started
 		User.findOne({username:req.body.username, password:req.body.password}, function(err, userf) {
 			if(err){
 				throw err;
 			}else if (userf){ 			//if the user was found
-				console.log('User found in data base');*/
+				console.log('User found in data base');
 				session2 = new User({username:req.body.username, password:req.body.password});
 				res.redirect('/newGame');
-			/*}else{7
+			}else{7
 				res.render('wrong');
 			}
 		});
-	}else{*/
+	}else{
 		res.redirect('/');
-	});
+	}
+});
 
 
 router.get('/logout', function(req, res) {
@@ -143,6 +144,7 @@ router.post('/round', function(req,res){
 	}else{
 		console.log("action: "+req.body.what+"value: "+req.body.how);
 		myGame.play(myGame.currentRound.currentTurn,req.body.what,req.body.how);
+		console.log("si ves esto el error es de index");
 		if(myGame.score[0]>=30){				//takes player´s action and value
 			myGame=undefined;					//looks for a winner
 			res.render('wins', {user: req.session.user.username});
