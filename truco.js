@@ -1,7 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
 var app = express();
-var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var routes = require('./routes/index');
 var path = require('path');
 var logger = require('morgan');
@@ -14,8 +13,6 @@ var expressValidator = require('express-validator');
 app.set('port', process.env.PORT || 3000);
 
 app.disable('x-powered-by');
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'jade');
 
 //uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
