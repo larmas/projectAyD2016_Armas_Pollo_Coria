@@ -1,11 +1,11 @@
 var socket = io.connect('http://localhost:8080', { 'forceNew': true });
 
-socket.on('messages', function(data) {  
+socket.on('messages', function(data) {
   console.log(data);
   render(data);
 })
 
-function render (data) {  
+function render (data) {
   var html = data.map(function(elem, index) {
     return(`<div>
               <strong>${elem.author}</strong>:
@@ -16,7 +16,7 @@ function render (data) {
   document.getElementById('messages').innerHTML = html;
 }
 
-function addMessage(e) {  
+function addMessage(e) {
   var message = {
     author: document.getElementById('username').value,
     text: document.getElementById('texto').value

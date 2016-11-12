@@ -1,12 +1,43 @@
-var express = require('express');  
-var app = express();  
-var server = require('http').Server(app);  
+var express = require('express');
+var _ = require('lodash');
+var app = express();
+var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var path = require('path');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var session = require('express-session');
+var expressValidator = require('express-validator');
+
+var User = require('../models/user');
+var Game = require('../models/game').game;
+var Player = require('../models/player').player;
+var session2= undefined;
+var Game = require("../models/game").game;
+var myGame=undefined;
 
 app.disable('x-powered-by');
 app.set('view engine', 'jade');
 
-var messages = [{  
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(expressValidator());
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret: 'max',
+    resave: false,
+    saveUninitialized: false
+}));
+
+
+// mongoose
+mongoose.connect('mongodb://127.0.0.1/truco-development');
+
+var messages = [{
   id: 1,
   text: "Hola soy un mensaje",
   author: "Carlos Azaustre"
@@ -14,8 +45,8 @@ var messages = [{
 
 app.use(express.static('public'));
 
-app.get('/', function(req, res) {  
-  res.render('index');
+app.get('/', function(req, res) {
+  res.render('home',{user:req.session.user});
 });
 
 app.get('/register', function(req, res) {
@@ -58,7 +89,7 @@ app.post('/login', function(req, res) {
 	console.log('Pass : ' + req.body.password);
 	if(!req.session.user){		//if there is no session opened
 		User.findOne({username:req.body.username, password:req.body.password}, function(err, userf) {
-			if(err){			//tries to find the user with the entered data 
+			if(err){			//tries to find the user with the entered data
 				throw err;
 			}else if (userf){
 				console.log('User found in data base');
@@ -71,7 +102,7 @@ app.post('/login', function(req, res) {
 	}else{
 		res.redirect('/');
 	}
-	
+
 });
 
 
@@ -139,7 +170,7 @@ app.post('/process', function(req,res){
   res.redirect(303, '/thankyou');
 });
 
-io.on('connection', function(socket) {  
+io.on('connection', function(socket) {
   console.log('Alguien se ha conectado con Sockets');
   socket.emit('messages', messages);
 
@@ -150,6 +181,6 @@ io.on('connection', function(socket) {
   });
 });
 
-server.listen(8080, function() {  
+server.listen(8080, function() {
   console.log("Servidor corriendo en http://localhost:8080");
 });
