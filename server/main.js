@@ -39,7 +39,7 @@ mongoose.connect('mongodb://127.0.0.1/truco-development');
 var messages = [{
   id: 1,
   text: "Hola soy un mensaje",
-  author: "Carlos Azaustre"
+  author: "Carlitos"
 }];
 
 app.use(express.static('public'));
