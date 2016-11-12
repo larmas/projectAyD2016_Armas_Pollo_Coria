@@ -33,7 +33,6 @@ app.use(session({
     saveUninitialized: false
 }));
 
-
 // mongoose
 mongoose.connect('mongodb://127.0.0.1/truco-development');
 
@@ -83,7 +82,6 @@ app.get('/login', function(req, res) {
 	}
 });
 
-
 app.post('/login', function(req, res) {
 	console.log('Name : ' + req.body.username);
 	console.log('Pass : ' + req.body.password);
@@ -102,9 +100,7 @@ app.post('/login', function(req, res) {
 	}else{
 		res.redirect('/');
 	}
-
 });
-
 
 app.get('/session2', function(req, res) {
 	if (req.session.user){
@@ -114,7 +110,6 @@ app.get('/session2', function(req, res) {
 		res.redirect('/');
 	}
 });
-
 
 app.post('/session2', function(req, res) {
 	console.log('Name : ' + req.body.username);
@@ -135,7 +130,6 @@ app.post('/session2', function(req, res) {
 		res.redirect('/');
 	}
 });
-
 
 app.get('/logout', function(req, res) {
     req.session.destroy(function(err){
