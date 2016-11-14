@@ -163,22 +163,18 @@ router.get('/logout', function(req, res) {
 });
 
 io.sockets.on("connection", function(socket){
+
+
   socket.on("play", function(action, value){
     myGame.play(myGame.currentRound.currentTurn,action,value);
     console.log("esos parametros llegan a socket.on:"+action+" "+value);
     console.log("si ves esto el error es de index");
-    if(myGame.score[0]>=30){        //takes player´s action and value
-      myGame=undefined;         //looks for a winner
-      io.emit('wins', req.session.user.username);
-    }else if(myGame.score[1]>=30){
-      myGame=undefined;
-      io.emit('wins', session2.username);
-    } else {                //if game hasn´t ended
-      console.log("refresh y paso el newgame, can quiero: "+myGame.currentRound.fsm.can('quiero'));
-      console.log(myGame.currentRound.fsm.current);
-      io.emit('refresh');
-    }
+    console.log("refresh y paso el newgame, can quiero: "+myGame.currentRound.fsm.can('quiero'));
+    console.log(myGame.currentRound.fsm.current);
+    io.emit('refresh');
   });
+
+
 });
 
 
@@ -211,7 +207,7 @@ router.get('/round',function(req, res){
         res.render('wins', {user: req.session.user.username});
       }else if(myGame.score[1]>=30){
         myGame=undefined;
-        res.render('wins', {user: session2.username});
+        res.render('wins', {user: "hola1"});
       } else {                //if game hasn´t ended
         if (myGame.currentRound.status!='running'){//creates a new round if necessary
           myGame.newRound();
