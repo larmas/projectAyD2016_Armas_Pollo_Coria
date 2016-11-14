@@ -4,17 +4,21 @@ block content
     .home
       if(!user)
         .jumbotron
-          span#titlefont Welcome to Truco
-          p
-          span#sbfont Let's play
-          p
-            a.btn.btn-info.btn-lg(href='/register', role='button') Sign In
-            a.btn.btn-warning.btn-lg(href='/login', role='button') Log In
+          center
+            span#titlefont Welcome to Truco
+            p
+            span#sbfont Let's play
+            p
+            p
+              a.btn.btn-info.btn-lg(href='/register', role='button') Sign In
+              a.btn.btn-warning.btn-lg(href='/login', role='button') Log In
       if(user)
         .jumbotron
-          span#titlefont Main Menu
-          p
-          span#sbfont Logged as #{user.username}
-          p
-            a.btn.btn-info.btn-lg(href='/newGame', role='button') Play
-            a.btn.btn-warning.btn-lg(href='/logout', role='button') Log Out
+          center
+            span#titlefont Main Menu
+            p
+            span#sbfont Logged as #{user.username}
+            p
+            p
+              a.btn.btn-info.btn-lg(href='/newGame', role='button') Play
+              a.btn.btn-warning.btn-lg(href='/logout', role='button') Log Out

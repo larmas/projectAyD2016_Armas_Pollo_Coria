@@ -18,10 +18,10 @@ block content
 
   body
     .jumbotron
-      span#titlefont #{myGame.currentRound.currentTurn.name}´s turn
-      p
-        center
-          span#sbfont #{myGame.player1.name}: #{myGame.score[0]} | #{myGame.player2.name}:  #{myGame.score[1]}
+      center
+        span#titlefont #{myGame.currentRound.currentTurn.name}´s turn
+        p
+        span#sbfont #{myGame.player1.name}: #{myGame.score[0]} | #{myGame.player2.name}:  #{myGame.score[1]}
       p
         if(myGame.currentRound.currentTurn==myGame.player1)
           if(myGame.player1.allowed)
