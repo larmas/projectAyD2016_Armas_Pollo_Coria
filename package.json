@@ -4,8 +4,8 @@
   "description": "Quiero re truco",
   "main": "truco.js",
   "scripts": {
-     "test": "mocha",
-     "start": "SET NODE_ENV= development truco.js"
+    "test": "mocha",
+    "start": "SET NODE_ENV= development truco.js"
   },
   "author": "me",
   "license": "MIT",
@@ -25,7 +25,8 @@
     "mocha": "^2.5.1",
     "mongodb": "^2.1.18",
     "mongoose": "^4.4.19",
-    "morgan": "latest"
+    "morgan": "latest",
+    "socket.io": "^1.5.1"
   },
   "directories": {
     "test": "test"
