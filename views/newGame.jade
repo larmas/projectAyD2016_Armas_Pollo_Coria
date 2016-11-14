@@ -1,13 +1,21 @@
 extends main
 block content
   head
+    audio(controls= '')
+      source(src='song.mp3', type='audio/mpeg')
+    script(src="/socket.io/socket.io.js")
+    script.
+      var socket = io.connect('localhost:3000', {"forceNew": true});
+      socket.on("refresh", function (data) {
+        location.reload(true);
+      });
+      function plays(action, value){
+        socket.emit("play", action, value);
+      }
     style(type='text/css').
       body { margin: 10px;  background-color:#301806; }
       #my_canvas{ background:#FFF; border: #000 1px solid;}
-    script.
-      window.onbeforeunload = function(){
-        window.scrollTo(0,30);
-      }
+
   body
     .jumbotron
       span#titlefont #{myGame.currentRound.currentTurn.name}´s turn
@@ -20,56 +28,32 @@ block content
             center
               ul.nav.navbar-nav
                 li
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                      if(myGame.currentRound.fsm.can('envido'))
-                        button.btn.btn-success(type='submit') Envido
-                        input(name="what", type='hidden', value='envido')
-                        input(name="how",type='hidden', value=0)
+                  if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                    if(myGame.currentRound.fsm.can('envido'))
+                      button.btn.btn-success(onclick='plays("envido", 0)') Envido
                 li
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                      if(myGame.currentRound.fsm.can('real-envido'))
-                        button.btn.btn-success(type='submit') Real Envido
-                        input(name="what", type='hidden', value='real-envido')
-                        input(name="how",type='hidden', value=0)
+                  if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                    if(myGame.currentRound.fsm.can('real-envido'))
+                      button.btn.btn-success(onclick='plays("real-envido", 0)') Real Envido
                 li
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                      if(myGame.currentRound.fsm.can('f-envido'))
-                        button.btn.btn-success(type='submit') Falta Envido
-                        input(name="what", type='hidden', value='f-envido')
-                        input(name="how",type='hidden', value=0)
+                  if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                    if(myGame.currentRound.fsm.can('f-envido'))
+                      button.btn.btn-success(onclick='plays("f-envido", 0)') Falta Envido
                 li
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsm.can('truco'))
-                      button.btn.btn-warning(type='submit') Truco
-                      input(name="what", type='hidden', value='truco')
-                      input(name="how",type='hidden', value=0)
+                  if(myGame.currentRound.fsm.can('truco'))
+                    button.btn.btn-warning(onclick='plays("truco", 0)') Truco
                 li
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsm.can('retruco'))
-                        button.btn.btn-warning(type='submit') Retruco
-                        input(name="what", type='hidden', value='retruco')
-                        input(name="how",type='hidden', value=0)
+                  if(myGame.currentRound.fsm.can('retruco'))
+                    button.btn.btn-warning(onclick='plays("retruco", 0)') Retruco
                 li
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsm.can('vale4'))
-                      button.btn.btn-warning(type='submit') Vale 4
-                      input(name="what", type='hidden', value='vale4')
-                      input(name="how",type='hidden', value=0)  
+                  if(myGame.currentRound.fsm.can('vale4'))
+                    button.btn.btn-warning(onclick='plays("vale4", 0)') Vale 4
                 li
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsm.can('quiero'))
-                      button.btn.btn-info(type='submit') Quiero
-                      input(name="what", type='hidden', value='quiero')
-                      input(name="how",type='hidden', value=0)
+                  if(myGame.currentRound.fsm.can('quiero'))
+                    button.btn.btn-info(onclick='plays("quiero", 0)') Quiero
                 li
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.currentRound.fsm.can('no-quiero'))
-                      button.btn.btn-danger(type='submit') No Quiero
-                      input(name="what", type='hidden', value='no-quiero')
-                      input(name="how",type='hidden', value=0)
+                  if(myGame.currentRound.fsm.can('no-quiero'))
+                    button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
 
           p
             br  
@@ -77,23 +61,14 @@ block content
             center
               .form-group
                 .col-lg-4
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.player1.cards[0])
-                      input(name='submit', type='image', src=myGame.player1.cards[0].dir)
-                      input(name="what", type='hidden', value='play-card')
-                      input(name="how",type='hidden', value=0)
+                  if(myGame.player1.cards[0])
+                    input(name='submit', type='image', src=myGame.player1.cards[0].dir, onclick='plays("play-card",0)')
                 .col-lg-4
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.player1.cards[1])
-                      input(name='submit', type='image', src=myGame.player1.cards[1].dir)
-                      input(name="what", type='hidden', value='play-card')
-                      input(name="how",type='hidden', value=1)
+                  if(myGame.player1.cards[1])
+                    input(name='submit', type='image', src=myGame.player1.cards[1].dir, onclick='plays("play-card",1)')
                 .col-lg-4
-                  form(role='form', action='/round', method='POST')
-                    if(myGame.player1.cards[2])
-                      input(name='submit', type='image', src=myGame.player1.cards[2].dir)
-                      input(name="what", type='hidden', value='play-card')
-                      input(name="how",type='hidden', value=2)
+                  if(myGame.player1.cards[2])
+                    input(name='submit', type='image', src=myGame.player1.cards[2].dir, onclick='plays("play-card",2)')
         if(myGame.currentRound.currentTurn!=myGame.player1)
           center
             .form-group
@@ -157,23 +132,14 @@ block content
           center
             .form-group
               .col-lg-4
-                form(role='form', action='/round', method='POST')
-                  if(myGame.player2.cards[0])
-                    input(name='submit', type='image', src=myGame.player2.cards[0].dir)
-                    input(name="what", type='hidden', value='play-card')
-                    input(name="how",type='hidden', value=0)
+                if(myGame.player2.cards[0])
+                  input(name='submit', type='image', src=myGame.player2.cards[0].dir, onclick='plays("play-card",0)')
               .col-lg-4
-                form(role='form', action='/round', method='POST')
-                  if(myGame.player2.cards[1])
-                    input(name='submit', type='image', src=myGame.player2.cards[1].dir)
-                    input(name="what", type='hidden', value='play-card')
-                    input(name="how",type='hidden', value=1)
+                if(myGame.player2.cards[1])
+                  input(name='submit', type='image', src=myGame.player2.cards[1].dir, onclick='plays("play-card",1)')
               .col-lg-4
-                form(role='form', action='/round', method='POST')
-                  if(myGame.player2.cards[2])
-                    input(name='submit', type='image', src=myGame.player2.cards[2].dir)
-                    input(name="what", type='hidden', value='play-card')
-                    input(name="how",type='hidden', value=2)
+                if(myGame.player2.cards[2])
+                  input(name='submit', type='image', src=myGame.player2.cards[2].dir, onclick='plays("play-card",2)')
           if(myGame.player2.allowed)
             p
               br  
@@ -183,56 +149,32 @@ block content
               center
                 ul.nav.navbar-nav
                   li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                        if(myGame.currentRound.fsm.can('envido'))
-                          button.btn.btn-success(type='submit') Envido
-                          input(name="what", type='hidden', value='envido')
-                          input(name="how",type='hidden', value=0)
+                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                      if(myGame.currentRound.fsm.can('envido'))
+                        button.btn.btn-success(onclick='plays("envido", 0)') Envido
                   li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                        if(myGame.currentRound.fsm.can('real-envido'))
-                          button.btn.btn-success(type='submit') Real Envido
-                          input(name="what", type='hidden', value='real-envido')
-                          input(name="how",type='hidden', value=0)
+                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                      if(myGame.currentRound.fsm.can('real-envido'))
+                        button.btn.btn-success(onclick='plays("real-envido", 0)') Real Envido
                   li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                        if(myGame.currentRound.fsm.can('f-envido'))
-                          button.btn.btn-success(type='submit') Falta Envido
-                          input(name="what", type='hidden', value='f-envido')
-                          input(name="how",type='hidden', value=0)
+                    if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                      if(myGame.currentRound.fsm.can('f-envido'))
+                        button.btn.btn-success(onclick='plays("f-envido", 0)') Falta Envido
                   li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('truco'))
-                        button.btn.btn-warning(type='submit') Truco
-                        input(name="what", type='hidden', value='truco')
-                        input(name="how",type='hidden', value=0)
+                    if(myGame.currentRound.fsm.can('truco'))
+                      button.btn.btn-warning(onclick='plays("truco", 0)') Truco
                   li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('retruco'))
-                          button.btn.btn-warning(type='submit') Retruco
-                          input(name="what", type='hidden', value='retruco')
-                          input(name="how",type='hidden', value=0)
+                    if(myGame.currentRound.fsm.can('retruco'))
+                      button.btn.btn-warning(onclick='plays("retruco", 0)') Retruco
                   li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('vale4'))
-                        button.btn.btn-warning(type='submit') Vale 4
-                        input(name="what", type='hidden', value='vale4')
-                        input(name="how",type='hidden', value=0)  
+                    if(myGame.currentRound.fsm.can('vale4'))
+                      button.btn.btn-warning(onclick='plays("vale4", 0)') Vale 4
                   li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('quiero'))
-                        button.btn.btn-info(type='submit') Quiero
-                        input(name="what", type='hidden', value='quiero')
-                        input(name="how",type='hidden', value=0)
+                    if(myGame.currentRound.fsm.can('quiero'))
+                      button.btn.btn-info(onclick='plays("quiero", 0)') Quiero
                   li
-                    form(role='form', action='/round', method='POST')
-                      if(myGame.currentRound.fsm.can('no-quiero'))
-                        button.btn.btn-danger(type='submit') No Quiero
-                        input(name="what", type='hidden', value='no-quiero')
-                        input(name="how",type='hidden', value=0)
+                    if(myGame.currentRound.fsm.can('no-quiero'))
+                      button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
             
         if(myGame.currentRound.currentTurn!=myGame.player2)
           center
