@@ -16,7 +16,7 @@ var Card = cardModel.card;
 function newTrucoFSM(){
 	var fsm = StateMachine.create({			//defines state in terms of chants made
 		initial: 'init',
-		events: 
+		events:
 			[
 			 { name: 'envido',    		from: ['init','trucoNE'],				to: 'envido' },
 			 { name: 'envido',    		from: ['envido'],					to: 'envido-e' },
@@ -33,7 +33,7 @@ function newTrucoFSM(){
 			 { name: 'quiero',    		from: ['envido-re'],        		to: 'quiero-e-re'  },
 			 { name: 'quiero',  		from: ['envido-e-re'],     			to: 'quiero-e-e-re'  },
 			 { name: 'quiero',    		from: ['f-envido'],        			to: 'quiero-fe'  },
-			 
+
 			 { name: 'no-quiero',    	from: ['envido'],        			to: 'no-quiero-e'  },
 			 { name: 'no-quiero',  		from: ['envido-e'],        			to: 'no-quiero-e-e'  },
 			 { name: 'no-quiero',   	from: ['real-envido'],        		to: 'no-quiero-re'  },
@@ -57,7 +57,7 @@ function newTrucoFSM(){
 			 { name: 'vale4', 			from: ['retruco','quiero-rt'],      to: 'vale4' },
 			 { name: 'no-quiero', 		from: ['vale4'],              		to: 'no-quiero-v4' },
 			 { name: 'quiero', 			from: ['vale4'],	              	to: 'quiero-v4' },
-			 
+
 		]});
 	return fsm;
 };
@@ -65,18 +65,18 @@ function newTrucoFSM(){
 function newPlayedFSM(){				//defines state in terms of playing cards
 	var fsm = StateMachine.create({
 	initial: 'init',
-	events: 
+	events:
 		[{ name: 'play-card', 	from: 'init',     				to: 'first-card' },
-	     
+
 		 { name: 'play-card-w', from: 'first-card',				to: 'p2-won-1st'  },
 		 { name: 'play-card-s', from: 'first-card',				to: 'pardas'  },
 		 { name: 'play-card-l', from: 'first-card',				to: 'p1-won-1st'  },
-	     
+
 	     { name: 'play-card', 	from: 'p2-won-1st',				to: 'third-card-2'  },
 	     { name: 'play-card', 	from: ['pardas',
 	                          	       'definitive-hand'],		to: 'definitive-hand'  },
 	     { name: 'play-card', 	from: 'p1-won-1st',			 	to: 'third-card-1'  },
-	     
+
 	     { name: 'play-card-w', from: 'third-card-2',			to: '1vs1-2'  },
 	     { name: 'play-card-s', from: 'third-card-2',			to: 'p2-wins'  },
 	     { name: 'play-card-l', from: 'third-card-2',			to: 'p2-wins'  },
@@ -86,17 +86,17 @@ function newPlayedFSM(){				//defines state in terms of playing cards
 	     { name: 'play-card-w', from: 'third-card-1',			to: '1vs1-1'  },
 	     { name: 'play-card-s', from: 'third-card-1',			to: 'p1-wins'  },
 	     { name: 'play-card-l', from: 'third-card-1',			to: 'p1-wins'  },
-	     
+
 	     { name: 'play-card', 	from: '1vs1-2',				 	to: 'fifth-card-2'  },
 	     { name: 'play-card', 	from: 'pardas-2',				to: 'fifth-card-1'  },
 	     { name: 'play-card', 	from: '1vs1-1',				 	to: 'fifth-card-1'  },
-	     
+
 	     { name: 'play-card-w', from: 'fifth-card-2',			to: 'p2-wins'  },
 	     { name: 'play-card-s', from: 'fifth-card-2',			to: 'p2-wins'  },
 	     { name: 'play-card-l', from: 'fifth-card-2',			to: 'p1-wins'  },
 	     { name: 'play-card-w', from: 'fifth-card-1',			to: 'p1-wins'  },
 	     { name: 'play-card-s', from: 'fifth-card-1',			to: 'p1-wins'  },
-	     { name: 'play-card-l', from: 'fifth-card-1',			to: 'p2-wins'  },	     
+	     { name: 'play-card-l', from: 'fifth-card-1',			to: 'p2-wins'  },
 	]});
 	return fsm;
 };
@@ -133,12 +133,25 @@ Round.prototype.deal = function(){
 };
 
 Round.prototype.changeTurn = function(game,action){
-	if (action=='play-card' &&(this.fsmCP.current=='p2-won-1st' || this.fsmCP.current=='1vs1-1' || this.fsmCP.current=='1vs1-2')){
-		return this.currentTurn;
+	if(action=='quiero' || action=='no-quiero'){
+		if (this.board1.length<this.board2.length){
+			return this.player2;
+		}else if (this.board2.length<this.board1.length){
+			return this.player1;
+		}else{
+			return this.currentTurn;
+		}
+	}else{
+		if (action=='play-card' && (this.fsmCP.current=='p2-won-1st' ||
+				this.fsmCP.current=='1vs1-1' ||
+				this.fsmCP.current=='1vs1-2')){
+			return this.currentTurn;
+		}
+		else{
+			return this.currentTurn = this.switchPlayer(this.currentTurn,this.game);
+		}
 	}
-	else{
-		return this.currentTurn = this.switchPlayer(this.currentTurn,this.game);
-	}
+
 };
 
 /* returns the opposite player */
@@ -164,7 +177,7 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP){
 		else if (fsm.current=='quiero-re')				{if(auxEn){scoreX=[0,3];} else{scoreX=[3,0];}}
 		else if (fsm.current=='quiero-e-re')			{if(auxEn){scoreX=[0,5];} else{scoreX=[5,0];}}
 		else if (fsm.current=='quiero-e-e-re')			{if(auxEn){scoreX=[0,7];} else{scoreX=[7,0];}}
-		else if (fsm.current=='quiero-fe')				{if(auxEn){scoreX=[0,x];} else{scoreX=[y,0];}}	
+		else if (fsm.current=='quiero-fe')				{if(auxEn){scoreX=[0,x];} else{scoreX=[y,0];}}
 	}
 	else if(action=='no-quiero'){ //calculates score of a no quiero
 		if (fsm.current=='no-quiero-e')					{if(aux){scoreX=[0,1];} else{scoreX=[1,0];}}
@@ -190,10 +203,10 @@ Round.prototype.calculateScore = function(action,fsm,fsmCP){
 			else 								{if(aux2){scoreX=[0,1];} else{scoreX=[1,0];}}
 		}
 	}
-	
+
 	this.score[0] += scoreX[0];		//adds score to the game itself
 	this.score[1] += scoreX[1];
-	
+
 	this.game.score[0] += scoreX[0];
 	this.game.score[1] += scoreX[1];
 
@@ -234,7 +247,7 @@ Round.prototype.makePlay = function (action,i,fsm,fsmCP,currentTurn){
 		}else{
 			currentTurn.allowed=false;
 			this.switchPlayer(currentTurn,this.game).allowed=true;
-		}		
+		}
 	}
 };
 
@@ -249,17 +262,17 @@ Round.prototype.checkStatus= function(fsmCP,fsm){
 Round.prototype.play = function(action, value,player) {
 	// move to next states
 	this.makePlay(action,value,this.fsm,this.fsmCP,player);
-	
+
 	// check if is needed sum score
 	this.calculateScore(action, this.fsm, this.fsmCP);
 
 	//check status
 	this.checkStatus(this.fsmCP,this.fsm);
-	
+
 	// Change player's turn
 	return this.changeTurn(this.game, action);
-	
-	
+
+
 };
 
 module.exports.round = Round;
