@@ -1,5 +1,18 @@
 extends main
 block content
+  head
+    script(src="/socket.io/socket.io.js")
+    script.
+      var socket = io.connect('localhost:3000', {"forceNew": true});
+      socket.on("refresh", function (data) {
+        location.replace('/round');
+      });
+      function joinG(username){
+        socket.emit('join', username);
+      }
+    style(type='text/css').
+      body { margin: 10px;  background-color:#301806; }
+      #my_canvas{ background:#FFF; border: #000 1px solid;}
   body
     .home
       if(!user)
@@ -20,5 +33,6 @@ block content
             span#sbfont Logged as #{user.username}
             p
             p
-              a.btn.btn-info.btn-lg(href='/newGame', role='button') Play
+              a.btn.btn-info.btn-lg(href='/newGame', role='button') New Game
+              a.btn.btn-info.btn-lg(onclick='joinG("#{user.username}")') Join Game
               a.btn.btn-warning.btn-lg(href='/logout', role='button') Log Out

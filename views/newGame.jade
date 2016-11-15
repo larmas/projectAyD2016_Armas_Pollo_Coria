@@ -18,134 +18,19 @@ block content
 
   body
     .jumbotron
-      center
-        span#titlefont #{myGame.currentRound.currentTurn.name}´s turn
+      if(myGame.player2.name=="")
+        center
+          span#titlefont Hold there
+          p
+          span#sbfont waiting for the opponent to connect, onces he/she does the game will start
+      if(myGame.player2.name!="")
+        center
+          span#titlefont #{myGame.currentRound.currentTurn.name}´s turn
+          p
+          span#sbfont #{myGame.player1.name}: #{myGame.score[0]} | #{myGame.player2.name}:  #{myGame.score[1]}
         p
-        span#sbfont #{myGame.player1.name}: #{myGame.score[0]} | #{myGame.player2.name}:  #{myGame.score[1]}
-      p
-        if(myGame.currentRound.currentTurn==myGame.player1)
-          if(myGame.player1.allowed)
-            center
-              ul.nav.navbar-nav
-                li
-                  if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                    if(myGame.currentRound.fsm.can('envido'))
-                      button.btn.btn-success(onclick='plays("envido", 0)') Envido
-                li
-                  if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                    if(myGame.currentRound.fsm.can('real-envido'))
-                      button.btn.btn-success(onclick='plays("real-envido", 0)') Real Envido
-                li
-                  if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
-                    if(myGame.currentRound.fsm.can('f-envido'))
-                      button.btn.btn-success(onclick='plays("f-envido", 0)') Falta Envido
-                li
-                  if(myGame.currentRound.fsm.can('truco'))
-                    button.btn.btn-warning(onclick='plays("truco", 0)') Truco
-                li
-                  if(myGame.currentRound.fsm.can('retruco'))
-                    button.btn.btn-warning(onclick='plays("retruco", 0)') Retruco
-                li
-                  if(myGame.currentRound.fsm.can('vale4'))
-                    button.btn.btn-warning(onclick='plays("vale4", 0)') Vale 4
-                li
-                  if(myGame.currentRound.fsm.can('quiero'))
-                    button.btn.btn-info(onclick='plays("quiero", 0)') Quiero
-                li
-                  if(myGame.currentRound.fsm.can('no-quiero'))
-                    button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
-
-          p
-            br  
-          p
-            center
-              .form-group
-                .col-lg-4
-                  if(myGame.player1.cards[0])
-                    input(name='submit', type='image', src=myGame.player1.cards[0].dir, onclick='plays("play-card",0)')
-                .col-lg-4
-                  if(myGame.player1.cards[1])
-                    input(name='submit', type='image', src=myGame.player1.cards[1].dir, onclick='plays("play-card",1)')
-                .col-lg-4
-                  if(myGame.player1.cards[2])
-                    input(name='submit', type='image', src=myGame.player1.cards[2].dir, onclick='plays("play-card",2)')
-        if(myGame.currentRound.currentTurn!=myGame.player1)
-          center
-            .form-group
-              .col-lg-4
-                if(myGame.player1.cards[0])
-                  img(src="/img/cards/backside.png")
-              .col-lg-4
-                if(myGame.player1.cards[1])
-                  img(src="/img/cards/backside.png") 
-              .col-lg-4
-                if(myGame.player1.cards[2])
-                  img(src="/img/cards/backside.png") 
-      p
-        br
-      p
-        br
-      p
-        br
-      p
-        br
-      p
-        .container
-          p
-            if(myGame.currentRound.board1)
-              center
-                .form-group
-                  .col-lg-4
-                    if(myGame.currentRound.board1[0])
-                      img(src=myGame.currentRound.board1[0].dir)
-                  .col-lg-4
-                    if(myGame.currentRound.board1[1])
-                      img(src=myGame.currentRound.board1[1].dir) 
-                  .col-lg-4
-                    if(myGame.currentRound.board1[2])
-                      img(src=myGame.currentRound.board1[2].dir)   
-          p
-            br  
-          p
-            br
-          p
-            br
-          p
-            br
-          p
-            if(myGame.currentRound.board2)
-              center
-                .form-group
-                  .col-lg-4
-                    if(myGame.currentRound.board2[0])
-                      img(src=myGame.currentRound.board2[0].dir)
-                  .col-lg-4
-                    if(myGame.currentRound.board2[1])
-                      img(src=myGame.currentRound.board2[1].dir) 
-                  .col-lg-4
-                    if(myGame.currentRound.board2[2])
-                      img(src=myGame.currentRound.board2[2].dir) 
-      p
-        br
-      p
-        if(myGame.currentRound.currentTurn==myGame.player2)
-          center
-            .form-group
-              .col-lg-4
-                if(myGame.player2.cards[0])
-                  input(name='submit', type='image', src=myGame.player2.cards[0].dir, onclick='plays("play-card",0)')
-              .col-lg-4
-                if(myGame.player2.cards[1])
-                  input(name='submit', type='image', src=myGame.player2.cards[1].dir, onclick='plays("play-card",1)')
-              .col-lg-4
-                if(myGame.player2.cards[2])
-                  input(name='submit', type='image', src=myGame.player2.cards[2].dir, onclick='plays("play-card",2)')
-          if(myGame.player2.allowed)
-            p
-              br  
-            p
-              br
-            p
+          if(myGame.currentRound.currentTurn==myGame.player1)
+            if(myGame.player1.allowed)
               center
                 ul.nav.navbar-nav
                   li
@@ -175,16 +60,137 @@ block content
                   li
                     if(myGame.currentRound.fsm.can('no-quiero'))
                       button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
-            
-        if(myGame.currentRound.currentTurn!=myGame.player2)
-          center
-            .form-group
-              .col-lg-4
-                if(myGame.player2.cards[0])
-                  img(src="/img/cards/backside.png")
-              .col-lg-4
-                if(myGame.player2.cards[1])
-                  img(src="/img/cards/backside.png")
-              .col-lg-4
-                if(myGame.player2.cards[2])
-                  img(src="/img/cards/backside.png")
+
+            p
+              br  
+            p
+              center
+                .form-group
+                  .col-lg-4
+                    if(myGame.player1.cards[0])
+                      input(name='submit', type='image', src=myGame.player1.cards[0].dir, onclick='plays("play-card",0)')
+                  .col-lg-4
+                    if(myGame.player1.cards[1])
+                      input(name='submit', type='image', src=myGame.player1.cards[1].dir, onclick='plays("play-card",1)')
+                  .col-lg-4
+                    if(myGame.player1.cards[2])
+                      input(name='submit', type='image', src=myGame.player1.cards[2].dir, onclick='plays("play-card",2)')
+          if(myGame.currentRound.currentTurn!=myGame.player1)
+            center
+              .form-group
+                .col-lg-4
+                  if(myGame.player1.cards[0])
+                    img(src="/img/cards/backside.png")
+                .col-lg-4
+                  if(myGame.player1.cards[1])
+                    img(src="/img/cards/backside.png") 
+                .col-lg-4
+                  if(myGame.player1.cards[2])
+                    img(src="/img/cards/backside.png") 
+        p
+          br
+        p
+          br
+        p
+          br
+        p
+          br
+        p
+          .container
+            p
+              if(myGame.currentRound.board1)
+                center
+                  .form-group
+                    .col-lg-4
+                      if(myGame.currentRound.board1[0])
+                        img(src=myGame.currentRound.board1[0].dir)
+                    .col-lg-4
+                      if(myGame.currentRound.board1[1])
+                        img(src=myGame.currentRound.board1[1].dir) 
+                    .col-lg-4
+                      if(myGame.currentRound.board1[2])
+                        img(src=myGame.currentRound.board1[2].dir)   
+            p
+              br  
+            p
+              br
+            p
+              br
+            p
+              br
+            p
+              if(myGame.currentRound.board2)
+                center
+                  .form-group
+                    .col-lg-4
+                      if(myGame.currentRound.board2[0])
+                        img(src=myGame.currentRound.board2[0].dir)
+                    .col-lg-4
+                      if(myGame.currentRound.board2[1])
+                        img(src=myGame.currentRound.board2[1].dir) 
+                    .col-lg-4
+                      if(myGame.currentRound.board2[2])
+                        img(src=myGame.currentRound.board2[2].dir) 
+        p
+          br
+        p
+          if(myGame.currentRound.currentTurn==myGame.player2)
+            center
+              .form-group
+                .col-lg-4
+                  if(myGame.player2.cards[0])
+                    input(name='submit', type='image', src=myGame.player2.cards[0].dir, onclick='plays("play-card",0)')
+                .col-lg-4
+                  if(myGame.player2.cards[1])
+                    input(name='submit', type='image', src=myGame.player2.cards[1].dir, onclick='plays("play-card",1)')
+                .col-lg-4
+                  if(myGame.player2.cards[2])
+                    input(name='submit', type='image', src=myGame.player2.cards[2].dir, onclick='plays("play-card",2)')
+            if(myGame.player2.allowed)
+              p
+                br  
+              p
+                br
+              p
+                center
+                  ul.nav.navbar-nav
+                    li
+                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                        if(myGame.currentRound.fsm.can('envido'))
+                          button.btn.btn-success(onclick='plays("envido", 0)') Envido
+                    li
+                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                        if(myGame.currentRound.fsm.can('real-envido'))
+                          button.btn.btn-success(onclick='plays("real-envido", 0)') Real Envido
+                    li
+                      if(myGame.currentRound.fsmCP.current=='init' ||myGame.currentRound.fsmCP.current=='first-card')
+                        if(myGame.currentRound.fsm.can('f-envido'))
+                          button.btn.btn-success(onclick='plays("f-envido", 0)') Falta Envido
+                    li
+                      if(myGame.currentRound.fsm.can('truco'))
+                        button.btn.btn-warning(onclick='plays("truco", 0)') Truco
+                    li
+                      if(myGame.currentRound.fsm.can('retruco'))
+                        button.btn.btn-warning(onclick='plays("retruco", 0)') Retruco
+                    li
+                      if(myGame.currentRound.fsm.can('vale4'))
+                        button.btn.btn-warning(onclick='plays("vale4", 0)') Vale 4
+                    li
+                      if(myGame.currentRound.fsm.can('quiero'))
+                        button.btn.btn-info(onclick='plays("quiero", 0)') Quiero
+                    li
+                      if(myGame.currentRound.fsm.can('no-quiero'))
+                        button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
+              
+          if(myGame.currentRound.currentTurn!=myGame.player2)
+            center
+              .form-group
+                .col-lg-4
+                  if(myGame.player2.cards[0])
+                    img(src="/img/cards/backside.png")
+                .col-lg-4
+                  if(myGame.player2.cards[1])
+                    img(src="/img/cards/backside.png")
+                .col-lg-4
+                  if(myGame.player2.cards[2])
+                    img(src="/img/cards/backside.png")

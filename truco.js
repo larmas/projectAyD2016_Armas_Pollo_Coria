@@ -135,18 +135,6 @@ router.post('/login', function(req, res) {
         res.render('wrong');
       }
     });
-  }else if (!session2){
-    User.findOne({username:req.body.username, password:req.body.password}, function(err, userf) {
-      if(err){      //tries to find the user with the entered data
-        throw err;
-      }else if (userf){
-        console.log('User found in data base');
-        session2 = new User({username:req.body.username, password:req.body.password});
-        res.redirect('/');
-      }else{
-        res.render('wrong');
-      }
-    });
   }else {
     res.redirect('/');
   }
@@ -164,6 +152,14 @@ router.get('/logout', function(req, res) {
 
 io.sockets.on("connection", function(socket){
 
+  socket.on("join", function(username){
+    console.log("entra a joooinnnn");
+    p2 = new Player(username);
+    myGame= new Game (myGame.player1, p2)
+    console.log("player2 name: "+myGame.player2.name);
+    socket.broadcast.emit('refresh');
+    io.emit('refresh');
+  });
 
   socket.on("play", function(action, value){
     myGame.play(myGame.currentRound.currentTurn,action,value);
@@ -183,7 +179,7 @@ router.get('/newGame', function(req, res) {
   console.log('entra a new game');
   if(req.session.user){           //creates 2 players with the entered data
       var player1= new Player(req.session.user.username);
-      var player2= new Player("hola1");
+      var player2= new Player("");
       myGame= new Game(player1, player2);   //creates a new game with those players
       console.log("about to play: "+myGame.player1.name+" vs. "+myGame.player2.name);
       console.log("score: "+myGame.score[0]+" vs "+ myGame.score[1]);
@@ -215,6 +211,7 @@ router.get('/round',function(req, res){
         }
       }
     }
+    console.log("llamo al render newGame");
     res.render('newGame',{myGame: myGame}); //renders the game
   }else{
     res.redirect('/');
