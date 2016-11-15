@@ -69,15 +69,26 @@ block content
               br
             center
               .form-group
-                .col-lg-4
-                  if(myGame.player1.cards[0])
-                    input(name='submit', type='image', src=myGame.player1.cards[0].dir, onclick='plays("play-card",0)')
-                .col-lg-4
-                  if(myGame.player1.cards[1])
-                    input(name='submit', type='image', src=myGame.player1.cards[1].dir, onclick='plays("play-card",1)')
-                .col-lg-4
-                  if(myGame.player1.cards[2])
-                    input(name='submit', type='image', src=myGame.player1.cards[2].dir, onclick='plays("play-card",2)')
+                if(myGame.currentRound.currentTurn==myGame.player1)
+                  .col-lg-4
+                    if(myGame.player1.cards[0])
+                        input(name='submit', type='image', src=myGame.player1.cards[0].dir, onclick='plays("play-card",0)')
+                  .col-lg-4
+                    if(myGame.player1.cards[1])
+                      input(name='submit', type='image', src=myGame.player1.cards[1].dir, onclick='plays("play-card",1)')
+                  .col-lg-4
+                    if(myGame.player1.cards[2])
+                      input(name='submit', type='image', src=myGame.player1.cards[2].dir, onclick='plays("play-card",2)')
+                if(myGame.currentRound.currentTurn!=myGame.player1)
+                  .col-lg-4
+                    if(myGame.player1.cards[0])
+                      img(src=myGame.player1.cards[0].dir)
+                  .col-lg-4
+                    if(myGame.player1.cards[1])
+                      img(src=myGame.player1.cards[1].dir)
+                  .col-lg-4
+                    if(myGame.player1.cards[2])
+                      img(src=myGame.player1.cards[2].dir)
             p
               br
             p
@@ -174,15 +185,26 @@ block content
             p
               center
                 .form-group
-                  .col-lg-4
-                    if(myGame.player2.cards[0])
-                      input(name='submit', type='image', src=myGame.player2.cards[0].dir, onclick='plays("play-card",0)')
-                  .col-lg-4
-                    if(myGame.player2.cards[1])
-                      input(name='submit', type='image', src=myGame.player2.cards[1].dir, onclick='plays("play-card",1)')
-                  .col-lg-4
-                    if(myGame.player2.cards[2])
-                      input(name='submit', type='image', src=myGame.player2.cards[2].dir, onclick='plays("play-card",2)')
+                  if(myGame.currentRound.currentTurn==myGame.player2)
+                    .col-lg-4
+                      if(myGame.player2.cards[0])
+                        input(name='submit', type='image', src=myGame.player2.cards[0].dir, onclick='plays("play-card",0)')
+                    .col-lg-4
+                      if(myGame.player2.cards[1])
+                        input(name='submit', type='image', src=myGame.player2.cards[1].dir, onclick='plays("play-card",1)')
+                    .col-lg-4
+                      if(myGame.player2.cards[2])
+                        input(name='submit', type='image', src=myGame.player2.cards[2].dir, onclick='plays("play-card",2)')
+                  if(myGame.currentRound.currentTurn!=myGame.player2)
+                    .col-lg-4
+                      if(myGame.player2.cards[0])
+                        img(src=myGame.player2.cards[0].dir)
+                    .col-lg-4
+                      if(myGame.player2.cards[1])
+                        img(src=myGame.player2.cards[1].dir)
+                    .col-lg-4
+                      if(myGame.player2.cards[2])
+                        img(src=myGame.player2.cards[2].dir)          
             p
               br
             p
