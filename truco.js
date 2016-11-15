@@ -150,36 +150,12 @@ router.get('/logout', function(req, res) {
     res.redirect('/');
 });
 
-io.sockets.on("connection", function(socket){
-
-  socket.on("join", function(username){
-    console.log("entra a joooinnnn");
-    p2 = new Player(username);
-    myGame= new Game (myGame.player1, p2)
-    console.log("player2 name: "+myGame.player2.name);
-    socket.broadcast.emit('refresh');
-    io.emit('refresh');
-  });
-
-  socket.on("play", function(action, value){
-    myGame.play(myGame.currentRound.currentTurn,action,value);
-    console.log("esos parametros llegan a socket.on:"+action+" "+value);
-    console.log("si ves esto el error es de index");
-    console.log("refresh y paso el newgame, can quiero: "+myGame.currentRound.fsm.can('quiero'));
-    console.log(myGame.currentRound.fsm.current);
-    io.emit('refresh');
-  });
-
-
-});
-
-
-
 router.get('/newGame', function(req, res) {
   console.log('entra a new game');
   if(req.session.user){           //creates 2 players with the entered data
       var player1= new Player(req.session.user.username);
       var player2= new Player("");
+      playerView=player1.name;
       myGame= new Game(player1, player2);   //creates a new game with those players
       console.log("about to play: "+myGame.player1.name+" vs. "+myGame.player2.name);
       console.log("score: "+myGame.score[0]+" vs "+ myGame.score[1]);
@@ -189,8 +165,6 @@ router.get('/newGame', function(req, res) {
     res.redirect('/');
   }
 });
-
-
 
 router.get('/round',function(req, res){
   if(req.session.user && myGame!=undefined){
@@ -212,12 +186,43 @@ router.get('/round',function(req, res){
       }
     }
     console.log("llamo al render newGame");
-    res.render('newGame',{myGame: myGame}); //renders the game
+      res.render('newGame',{myGame: myGame, playerView: req.session.user.username}); //renders the game
   }else{
     res.redirect('/');
   }
 });
 
+
+
+io.sockets.on("connection", function(socket){
+  /*if (!name1){
+    name1=myGame.player1.name;
+    socket.id=name1;
+  }else if (!name2){
+    name2=myGame.player2.name;
+    socket.id=name2;
+  }*/
+  socket.on("join", function(username){
+    console.log("entra a joooinnnn");
+    p2 = new Player(username);
+    //playerView=p2.name;
+    myGame= new Game (myGame.player1, p2)
+    console.log("player2 name: "+myGame.player2.name);
+    io.emit('refresh');
+  });
+
+  socket.on("play", function(action, value, username){
+    myGame.play(myGame.currentRound.currentTurn,action,value);
+    console.log("esos parametros llegan a socket.on:"+action+" "+value);
+    console.log("si ves esto el error es de index");
+    console.log("refresh y paso el newgame, can quiero: "+myGame.currentRound.fsm.can('quiero'));
+    console.log(myGame.currentRound.fsm.current);
+    //playerView=undefined;
+    io.emit('refresh');
+  });
+
+
+});
 
 router.get('/ping', function(req, res){
     res.status(200).send("pong!");
