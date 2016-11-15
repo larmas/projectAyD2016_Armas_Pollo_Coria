@@ -182,9 +182,9 @@ io.sockets.on("connection", function(socket){
 router.get('/newGame', function(req, res) {
   console.log('entra a new game');
   if(req.session.user){           //creates 2 players with the entered data
-      var player1= new Player(req.session.user.username);
-      var player2= new Player("hola1");
-      myGame= new Game(player1, player2);   //creates a new game with those players
+      var player1 = new Player(req.session.user.username);
+      var player2 = new Player("hola1");
+      myGame      = new Game(player1, player2);   //creates a new game with those players
       console.log("about to play: "+myGame.player1.name+" vs. "+myGame.player2.name);
       console.log("score: "+myGame.score[0]+" vs "+ myGame.score[1]);
       res.redirect('/round');
