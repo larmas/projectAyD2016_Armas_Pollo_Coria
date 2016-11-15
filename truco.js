@@ -124,7 +124,7 @@ router.post('/login', function(req, res) {
   console.log('Pass : ' + req.body.password);
   if(!req.session.user){    //if there is no session opened
     User.findOne({username:req.body.username, password:req.body.password}, function(err, userf) {
-      if(err){      //tries to find the user with the entered data 
+      if(err){      //tries to find the user with the entered data
         throw err;
       }else if (userf){
         console.log('User found in data base');
@@ -137,7 +137,7 @@ router.post('/login', function(req, res) {
     });
   }else if (!session2){
     User.findOne({username:req.body.username, password:req.body.password}, function(err, userf) {
-      if(err){      //tries to find the user with the entered data 
+      if(err){      //tries to find the user with the entered data
         throw err;
       }else if (userf){
         console.log('User found in data base');
@@ -150,7 +150,7 @@ router.post('/login', function(req, res) {
   }else {
     res.redirect('/');
   }
-  
+
 });
 
 router.get('/logout', function(req, res) {
@@ -247,4 +247,3 @@ router.post('/process', function(req,res){
 });
 
 module.exports = app;
-
