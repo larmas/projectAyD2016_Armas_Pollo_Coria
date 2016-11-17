@@ -15,7 +15,6 @@ block content
     style(type='text/css').
       body { margin: 10px;  background-color:#301806; }
       #my_canvas{ background:#FFF; border: #000 1px solid;}
-
   body
     .jumbotron
       right
@@ -110,7 +109,6 @@ block content
                   li
                     if(myGame.currentRound.fsm.can('no-quiero'))
                       button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
-
             p
               br  
             p
@@ -194,8 +192,6 @@ block content
                   .col-lg-4
                     if(myGame.player2.cards[2])
                       img(src="/img/cards/backside.png")
-                    
-                          
           if(myGame.player1.name!=playerView)
             if(myGame.player2.allowed && myGame.currentRound.currentTurn==myGame.player2)
               center
@@ -227,7 +223,6 @@ block content
                   li
                     if(myGame.currentRound.fsm.can('no-quiero'))
                       button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
-
             p
               br  
             p
@@ -275,7 +270,6 @@ block content
                       .col-lg-4
                         if(myGame.currentRound.board2[2])
                           img(src=myGame.currentRound.board2[2].dir) 
-                    
                   p
                     br  
                   p
@@ -311,7 +305,3 @@ block content
                 .col-lg-4
                   if(myGame.player1.cards[2])
                     img(src="/img/cards/backside.png")
-            
-        
-      
-      
