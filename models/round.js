@@ -49,7 +49,7 @@ function newTrucoFSM(){
 			                      		       'no-quiero-e-re','no-quiero-e-e-re',
 			                      		       'no-quiero-fe'],      		to: 'truco'  },
 			 { name: 'quiero', 			from: ['trucoNE','truco'],          to: 'quiero-t' },
-			 { name: 'no-quiero', 		from: ['truco'],              		to: 'no-quiero-t' },
+			 { name: 'no-quiero', 		from: ['trucoNE','truco'],              		to: 'no-quiero-t' },
 			 { name: 'retruco', 		from: ['truco','quiero-t',
 			 									'trucoNE'], 				to: 'retruco' },
 			 { name: 'no-quiero', 		from: ['retruco'],              	to: 'no-quiero-rt' },
