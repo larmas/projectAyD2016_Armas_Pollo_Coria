@@ -15,7 +15,6 @@ block content
     style(type='text/css').
       body { margin: 10px;  background-color:#301806; }
       #my_canvas{ background:#FFF; border: #000 1px solid;}
-
   body
     .jumbotron
       right
@@ -29,7 +28,55 @@ block content
         center
           span#titlefont #{myGame.currentRound.currentTurn.name}´s turn
           p
-          span#sbfont #{myGame.player1.name}: #{myGame.score[0]} | #{myGame.player2.name}:  #{myGame.score[1]}
+          ul.nav.navbar-right
+            li
+              span#sbfont #{myGame.player1.name}: #{myGame.score[0]} | #{myGame.player2.name}:  #{myGame.score[1]} 
+          ul.nav.navbar-left
+            li
+              if(myGame.currentRound.currentTurn==myGame.player1)
+                if(myGame.currentRound.fsm.current=='trucoNE' || myGame.currentRound.fsm.current=='truco')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : Truco!
+                if(myGame.currentRound.fsm.current=='retruco')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : Retruco!
+                if(myGame.currentRound.fsm.current=='vale4')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : Vale cuatro!
+                if(myGame.currentRound.fsm.current=='envido' || myGame.currentRound.fsm.current=='envido-e')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : Envido!
+                if(myGame.currentRound.fsm.current=='real-envido' || myGame.currentRound.fsm.current=='envido-re' || myGame.currentRound.fsm.current=='envido-e-re')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : Real Envido!
+                if(myGame.currentRound.fsm.current=='f-envido')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : Falta Envido!
+                if(myGame.currentRound.fsm.current=='quiero-e' || myGame.currentRound.fsm.current=='quiero-e-e' || myGame.currentRound.fsm.current=='quiero-re' || myGame.currentRound.fsm.current=='quiero-e-re' || myGame.currentRound.fsm.current=='quiero-e-e-re' || myGame.currentRound.fsm.current=='quiero-fe')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : Quiero!
+                if(myGame.currentRound.fsm.current=='quiero-t' || myGame.currentRound.fsm.current=='quiero-rt' || myGame.currentRound.fsm.current=='quiero-v4')  
+                  button.btn.btn-primary #{myGame.player2.name}'s says : Quiero!
+                if(myGame.currentRound.fsm.current=='no-quiero-e' || myGame.currentRound.fsm.current=='no-quiero-e-e' || myGame.currentRound.fsm.current=='no-quiero-re' || myGame.currentRound.fsm.current=='no-quiero-e-re' || myGame.currentRound.fsm.current=='no-quiero-e-e-re' || myGame.currentRound.fsm.current=='no-quiero-fe')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : No quiero!
+                if(myGame.currentRound.fsm.current=='no-quiero-t' || myGame.currentRound.fsm.current=='no-quiero-rt' || myGame.currentRound.fsm.current=='no-quiero-v4')
+                  button.btn.btn-primary #{myGame.player2.name}'s says : No quiero!
+              if(myGame.currentRound.currentTurn==myGame.player2)
+                if(myGame.currentRound.fsm.current=='trucoNE' || myGame.currentRound.fsm.current=='truco')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : Truco!
+                if(myGame.currentRound.fsm.current=='retruco')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : Retruco!
+                if(myGame.currentRound.fsm.current=='vale4')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : Vale cuatro!
+                if(myGame.currentRound.fsm.current=='envido' || myGame.currentRound.fsm.current=='envido-e')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : Envido!
+                if(myGame.currentRound.fsm.current=='real-envido' || myGame.currentRound.fsm.current=='envido-re' || myGame.currentRound.fsm.current=='envido-e-re')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : Real Envido!
+                if(myGame.currentRound.fsm.current=='f-envido')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : Falta Envido!
+                if(myGame.currentRound.fsm.current=='quiero-e' || myGame.currentRound.fsm.current=='quiero-e-e' || myGame.currentRound.fsm.current=='quiero-re' || myGame.currentRound.fsm.current=='quiero-e-re' || myGame.currentRound.fsm.current=='quiero-e-e-re' || myGame.currentRound.fsm.current=='quiero-fe')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : Quiero!
+                if(myGame.currentRound.fsm.current=='quiero-t' || myGame.currentRound.fsm.current=='quiero-rt' || myGame.currentRound.fsm.current=='quiero-v4')  
+                  button.btn.btn-primary #{myGame.player1.name}'s says : Quiero!
+                if(myGame.currentRound.fsm.current=='no-quiero-e' || myGame.currentRound.fsm.current=='no-quiero-e-e' || myGame.currentRound.fsm.current=='no-quiero-re' || myGame.currentRound.fsm.current=='no-quiero-e-re' || myGame.currentRound.fsm.current=='no-quiero-e-e-re' || myGame.currentRound.fsm.current=='no-quiero-fe')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : No quiero!
+                if(myGame.currentRound.fsm.current=='no-quiero-t' || myGame.currentRound.fsm.current=='no-quiero-rt' || myGame.currentRound.fsm.current=='no-quiero-v4')
+                  button.btn.btn-primary #{myGame.player1.name}'s says : No quiero!
+        p
+          br
         p
           if(myGame.player1.name==playerView)
             if(myGame.player1.allowed && myGame.currentRound.currentTurn==myGame.player1)
@@ -56,13 +103,12 @@ block content
                   li
                     if(myGame.currentRound.fsm.can('vale4'))
                       button.btn.btn-warning(onclick='plays("vale4", 0)') Vale 4
-                  li
+                  li 
                     if(myGame.currentRound.fsm.can('quiero'))
                       button.btn.btn-info(onclick='plays("quiero", 0)') Quiero
                   li
                     if(myGame.currentRound.fsm.can('no-quiero'))
                       button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
-
             p
               br  
             p
@@ -146,8 +192,6 @@ block content
                   .col-lg-4
                     if(myGame.player2.cards[2])
                       img(src="/img/cards/backside.png")
-                    
-                          
           if(myGame.player1.name!=playerView)
             if(myGame.player2.allowed && myGame.currentRound.currentTurn==myGame.player2)
               center
@@ -179,7 +223,6 @@ block content
                   li
                     if(myGame.currentRound.fsm.can('no-quiero'))
                       button.btn.btn-danger(onclick='plays("no-quiero", 0)') No Quiero
-
             p
               br  
             p
@@ -227,7 +270,6 @@ block content
                       .col-lg-4
                         if(myGame.currentRound.board2[2])
                           img(src=myGame.currentRound.board2[2].dir) 
-                    
                   p
                     br  
                   p
@@ -263,7 +305,3 @@ block content
                 .col-lg-4
                   if(myGame.player1.cards[2])
                     img(src="/img/cards/backside.png")
-            
-        
-      
-      

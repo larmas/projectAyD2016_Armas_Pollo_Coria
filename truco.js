@@ -1,7 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
 var app = express();
-//var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var routes = require('./routes/index');
 var path = require('path');
 var logger = require('morgan');
@@ -11,15 +10,20 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var expressValidator = require('express-validator');
 var router = express.Router();
+var User = require('./models/user');
+var Game = require('./models/game').game;
+var Player = require('./models/player').player;
+var session2= undefined;
+var Game = require("./models/game").game;
+var myGame=undefined;
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8080);
 
 app.disable('x-powered-by');
-//app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'jade');
 
-//uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -31,7 +35,6 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
-
 
 // mongoose
 mongoose.connect('mongodb://127.0.0.1/truco-development');
@@ -64,22 +67,7 @@ app.use(function(err, req, res, next){
   res.render('500');
 });
 
-/*app.listen(app.get('port'), function(){
-  console.log('Express started on http://localhost:' + app.get('port') + ' press Ctrl-C to terminate');
-});*/
-
-var User = require('./models/user');
-var Game = require('./models/game').game;
-var Player = require('./models/player').player;
-var session2= undefined;
-var Game = require("./models/game").game;
-var myGame=undefined;
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
 /* GET home page. */
-
-server.listen(3000);
-
 router.get('/', function (req, res) {
   res.render('home', {user:req.session.user});
 });
@@ -118,7 +106,6 @@ router.get('/login', function(req, res) {
   }
 });
 
-
 router.post('/login', function(req, res) {
   console.log('Name : ' + req.body.username);
   console.log('Pass : ' + req.body.password);
@@ -138,7 +125,6 @@ router.post('/login', function(req, res) {
   }else {
     res.redirect('/');
   }
-
 });
 
 router.get('/logout', function(req, res) {
@@ -192,20 +178,10 @@ router.get('/round',function(req, res){
   }
 });
 
-
-
 io.sockets.on("connection", function(socket){
-  /*if (!name1){
-    name1=myGame.player1.name;
-    socket.id=name1;
-  }else if (!name2){
-    name2=myGame.player2.name;
-    socket.id=name2;
-  }*/
   socket.on("join", function(username){
     console.log("entra a joooinnnn");
     p2 = new Player(username);
-    //playerView=p2.name;
     myGame= new Game (myGame.player1, p2)
     console.log("player2 name: "+myGame.player2.name);
     io.emit('refresh');
@@ -217,12 +193,9 @@ io.sockets.on("connection", function(socket){
     console.log("si ves esto el error es de index");
     console.log("refresh y paso el newgame, can quiero: "+myGame.currentRound.fsm.can('quiero'));
     console.log(myGame.currentRound.fsm.current);
-    //playerView=undefined;
     io.emit('refresh');
   });
-
-
-});
+});//End of socket on connection
 
 router.get('/ping', function(req, res){
     res.status(200).send("pong!");
@@ -248,4 +221,7 @@ router.post('/process', function(req,res){
   res.redirect(303, '/thankyou');
 });
 
+server.listen(3000,function(req,res){
+  console.log('Express started on http://localhost:' + app.get('port') + ' press Ctrl-C to terminate');
+});
 module.exports = app;
